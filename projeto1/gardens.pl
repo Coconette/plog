@@ -1,6 +1,9 @@
 gardens:-
 	emptyBoard(Board),
-	printBoard(Board).
+	NewActionLine(Board),
+	printBoard(Board),
+	printActionLine(Board).
+	
 	
 getCellSymbol(emptyCell, ' ').
 getCellSymbol(number0Cell, '0').
@@ -32,7 +35,8 @@ emptyBoard([
 	[number1Cell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, number9Cell],
 	[number0Cell, number9Cell, number8Cell, number7Cell, number6Cell, number5Cell, number4Cell, number3Cell, number2Cell, number1Cell, number0Cell]]).
 	
-[action1Cell, action2Cell, action3Cell, action4Cell, action5Cell].
+NewActionLine(
+[action1Cell, action2Cell, action3Cell, action4Cell, action5Cell]).
 
 printBoard([]):-
 	nl, nl,
@@ -48,3 +52,37 @@ printRow([Head | Tail]):-
 	getCellSymbol(Head, Piece),
 	write(Piece), write(' | '),
 	printRow(Tail).
+	
+	
+%not sure%
+
+	
+	printActionLine([]).
+	printActionLine([Head | Tail]):-
+	getCellSymbol(Head, Piece),
+	write(Piece), write(' | '),
+	printActionLine(Tail).
+
+%predicados de jogo%
+	
+	CheckNPlayers(Game).
+	CheckIfEmpty(Row1,Column1,Row2,Column2,Board).
+	CheckMarcianMove(Row1,Column1,Row2,Column2,Board).
+	CheckAction1(Player,Game).
+	CheckAction2(Player,Game).
+	CheckAction3(Player,Game).
+	CheckAction4(Player,Game).
+	CheckAction5(Player,Game).
+	
+	CountFlowers(Player,Board).
+	PlantFlower(Row,Column, Board).
+	IsLastFlowerPlant(Player).
+	PlantTree(Row, Column, Board).
+	SwapFlowers(Row1,Column1,Row2,Column2,Board).
+	SwapFlowerTree(Row1,Column1,Row2,Column2,Board).
+	MoveFlower(Row1,Column1,Row2,Column2,Board).
+	MoveTree(Row1,Column1,Row2,Column2,Board).
+	MoveMartian(Row1,Column1,Row2,Column2,Board).
+	IsLapDone(Player).
+	RemoveFlowers(Player,Board).
+	
