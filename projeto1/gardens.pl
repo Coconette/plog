@@ -1,8 +1,6 @@
 gardens:-
 	emptyBoard(Board),
-	NewActionLine(Board),
-	printBoard(Board),
-	printActionLine(Board).
+	printBoard(Board).
 	
 	
 getCellSymbol(emptyCell, ' ').
@@ -33,9 +31,8 @@ emptyBoard([
 	[number3Cell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, number7Cell],
 	[number2Cell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, number8Cell],
 	[number1Cell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, number9Cell],
-	[number0Cell, number9Cell, number8Cell, number7Cell, number6Cell, number5Cell, number4Cell, number3Cell, number2Cell, number1Cell, number0Cell]]).
+	[number0Cell, number9Cell, number8Cell, number7Cell, number6Cell, number5Cell, number4Cell, number3Cell, number2Cell, number1Cell, number0Cell]]
 	
-NewActionLine(
 [action1Cell, action2Cell, action3Cell, action4Cell, action5Cell]).
 
 printBoard([]):-
@@ -54,15 +51,6 @@ printRow([Head | Tail]):-
 	printRow(Tail).
 	
 	
-%not sure%
-
-	
-	printActionLine([]).
-	printActionLine([Head | Tail]):-
-	getCellSymbol(Head, Piece),
-	write(Piece), write(' | '),
-	printActionLine(Tail).
-
 %predicados de jogo%
 	
 	CheckNPlayers(Game).
@@ -85,4 +73,5 @@ printRow([Head | Tail]):-
 	MoveMartian(Row1,Column1,Row2,Column2,Board).
 	IsLapDone(Player).
 	RemoveFlowers(Player,Board).
+	
 	
