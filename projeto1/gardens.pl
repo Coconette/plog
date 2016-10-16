@@ -32,7 +32,8 @@ emptyBoard([
 	[number1Cell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, number9Cell],
 	[number0Cell, number9Cell, number8Cell, number7Cell, number6Cell, number5Cell, number4Cell, number3Cell, number2Cell, number1Cell, number0Cell]]).
 	
-[action1Cell, action2Cell, action3Cell, action4Cell, action5Cell].
+NewActionBoard(
+[action1Cell, action2Cell, action3Cell, action4Cell, action5Cell]).
 
 printBoard([]):-
 	nl, nl,
@@ -48,3 +49,31 @@ printRow([Head | Tail]):-
 	getCellSymbol(Head, Piece),
 	write(Piece), write(' | '),
 	printRow(Tail).
+	
+	
+%not %sure
+
+	
+	printActionBoard([]).
+	printActionBoard([Head | Tail]):-
+	getCellSymbol(Head, Piece),
+	write(Piece), write(' | '),
+	printActionBoard(Tail).
+
+%predicados %de %jogo
+	
+	CheckNPlayers().
+	CheckIfEmpty().
+	
+	CountFlowers().
+	PlantFlower().
+	IsLastFlowerPlant().
+	PlantTree().
+	SwapFlowers().
+	SwapFlowerTree().
+	MoveFlower().
+	MoveTree().
+	MoveMartian().
+	IsLapDone().
+	RemoveFlowers().
+	
