@@ -54,7 +54,7 @@ printRow([Head | Tail]):-
 %predicados de jogo%
 	
 	CheckNPlayers(Game).
-	CheckIfEmpty(Row1,Column1,Row2,Column2,Board).
+	CheckIfEmpty(Row,Column,Board).
 	CheckMarcianMove(Row1,Column1,Row2,Column2,Board).
 	CheckAction1(Player,Game).
 	CheckAction2(Player,Game).
