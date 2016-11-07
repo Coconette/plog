@@ -1,3 +1,24 @@
+game(2):- 
+nl, 
+write('          Starting a 2 player game!').
+
+game(3):- 
+nl, 
+write('          Starting a 3 player game!').
+
+game(4):- 
+nl, 
+write('          Starting a 4 player game!').
+
+game(5):- 
+nl, 
+write('          Starting a 5 player game!').
+
+chooseOption:-
+nl,
+read(Input),
+game(Input).
+
 initialMenu:-
 
 nl,nl,
@@ -10,13 +31,7 @@ write('2 players'),
 write('3 players'), 
  nl, 
 write('4 players'),
+ nl,
+write('5 players'),
  nl,nl,
-chooseOption. %Da erro??? %
-
-%funcao em separado funciona, mas nao chama "game"%
-chooseOption(X):-
-read(X)
-Game(X).
- %da erro%
-Game(X):-
-write('Im here').
+chooseOption.
