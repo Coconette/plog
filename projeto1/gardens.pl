@@ -1,77 +1,114 @@
-gardens:-
-	emptyBoard(Board),
-	printBoard(Board).
-	
-	
-getCellSymbol(emptyCell, ' ').
-getCellSymbol(number0Cell, '0').
-getCellSymbol(number1Cell, '1').
-getCellSymbol(number2Cell, '2').
-getCellSymbol(number3Cell, '3').
-getCellSymbol(number4Cell, '4').
-getCellSymbol(number5Cell, '5').
-getCellSymbol(number6Cell, '6').
-getCellSymbol(number7Cell, '7').
-getCellSymbol(number8Cell, '8').
-getCellSymbol(number9Cell, '9').
-getCellSymbol(action1Cell, 'V').
-getCellSymbol(action2Cell, 'W').
-getCellSymbol(action3Cell, 'X').
-getCellSymbol(action4Cell, 'Y').
-getCellSymbol(action5Cell, 'Z').
-		
-emptyBoard([
-	[number0Cell, number1Cell, number2Cell, number3Cell, number4Cell, number5Cell, number6Cell, number7Cell, number8Cell, number9Cell, number0Cell],
-	[number9Cell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, number1Cell],
-	[number8Cell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, number2Cell],
-	[number7Cell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, number3Cell],
-	[number6Cell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, number4Cell],
-	[number5Cell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, number5Cell],
-	[number4Cell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, number6Cell],
-	[number3Cell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, number7Cell],
-	[number2Cell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, number8Cell],
-	[number1Cell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, number9Cell],
-	[number0Cell, number9Cell, number8Cell, number7Cell, number6Cell, number5Cell, number4Cell, number3Cell, number2Cell, number1Cell, number0Cell]]
-	
-[action1Cell, action2Cell, action3Cell, action4Cell, action5Cell]).
+:- use_module(library(random)).
+:- include('gameMenu.pl').
+:- include('boardManager.pl').
 
-printBoard([]):-
-	nl, nl,
-	printRow(Actions).
+
+gardens:-
+	initialMenu.
+
+initGame(Players, Game):-
+	printStartGameInfo(Players),
+	initialBoard(Board),
+	generatePlayersInfo(Players, PlayersInfo),
+	Game = [Players, 1, Board, PlayersInfo],
+	printPlayerFlowers(PlayersInfo, 1, 0),
+	printPlayerFlowers(PlayersInfo, 2, 0),
+	write('done'), nl, !.
 	
-printBoard([Head | Tail]):-
-	write('| '),
-	printRow(Head), nl,
-	printBoard(Tail).
+generatePlayersInfo(Players, PlayersInfo):-
+	Players = 2 -> PlayersInfo = [
+							[Pur1, Red1, Blu1, Yel1, Whi1, Gre1, 0, 0, 0],
+							[Pur2, Red2, Blu2, Yel2, Whi2, Gre2, 0, 0, 0]],
+					randomizePlayerFlowers(27, 0, Pur1, Red1, Blu1, Yel1, Whi1, Gre1, 0, 0, 0, 0, 0, 0),
+					randomizePlayerFlowers(27, 0, Pur2, Red2, Blu2, Yel2, Whi2, Gre2, 0, 0, 0, 0, 0, 0),
+					write('Flowers Randomly Generated For All Players'), nl;
+	Players = 3 -> PlayersInfo = [
+							[Pur1, Red1, Blu1, Yel1, Whi1, Gre1, 0, 0, 0],
+							[Pur2, Red2, Blu2, Yel2, Whi2, Gre2, 0, 0, 0],
+							[Pur3, Red3, Blu3, Yel3, Whi3, Gre3, 0, 0, 0]],
+					randomizePlayerFlowers(18, 0, Pur1, Red1, Blu1, Yel1, Whi1, Gre1, 0, 0, 0, 0, 0, 0),
+					randomizePlayerFlowers(18, 0, Pur2, Red2, Blu2, Yel2, Whi2, Gre2, 0, 0, 0, 0, 0, 0),
+					randomizePlayerFlowers(18, 0, Pur3, Red3, Blu3, Yel3, Whi3, Gre3, 0, 0, 0, 0, 0, 0),
+					write('Flowers Randomly Generated For All Players'), nl;
+	Players = 4 -> PlayersInfo = [
+							[Pur1, Red1, Blu1, Yel1, Whi1, Gre1, 0, 0, 0],
+							[Pur2, Red2, Blu2, Yel2, Whi2, Gre2, 0, 0, 0],
+							[Pur3, Red3, Blu3, Yel3, Whi3, Gre3, 0, 0, 0],
+							[Pur4, Red4, Blu4, Yel4, Whi4, Gre4, 0, 0, 0]],
+					randomizePlayerFlowers(14, 0, Pur1, Red1, Blu1, Yel1, Whi1, Gre1, 0, 0, 0, 0, 0, 0),
+					randomizePlayerFlowers(14, 0, Pur2, Red2, Blu2, Yel2, Whi2, Gre2, 0, 0, 0, 0, 0, 0),
+					randomizePlayerFlowers(14, 0, Pur3, Red3, Blu3, Yel3, Whi3, Gre3, 0, 0, 0, 0, 0, 0),
+					randomizePlayerFlowers(14, 0, Pur4, Red4, Blu4, Yel4, Whi4, Gre4, 0, 0, 0, 0, 0, 0),
+					write('Flowers Randomly Generated For All Players'), nl;
+	Players = 3 -> PlayersInfo = [
+							[Pur1, Red1, Blu1, Yel1, Whi1, Gre1, 0, 0, 0],
+							[Pur2, Red2, Blu2, Yel2, Whi2, Gre2, 0, 0, 0],
+							[Pur3, Red3, Blu3, Yel3, Whi3, Gre3, 0, 0, 0],
+							[Pur4, Red4, Blu4, Yel4, Whi4, Gre4, 0, 0, 0],
+							[Pur5, Red5, Blu5, Yel5, Whi5, Gre5, 0, 0, 0]],
+					randomizePlayerFlowers(11, 0, Pur1, Red1, Blu1, Yel1, Whi1, Gre1, 0, 0, 0, 0, 0, 0),
+					randomizePlayerFlowers(11, 0, Pur2, Red2, Blu2, Yel2, Whi2, Gre2, 0, 0, 0, 0, 0, 0),
+					randomizePlayerFlowers(11, 0, Pur3, Red3, Blu3, Yel3, Whi3, Gre3, 0, 0, 0, 0, 0, 0),
+					randomizePlayerFlowers(11, 0, Pur4, Red4, Blu4, Yel4, Whi4, Gre4, 0, 0, 0, 0, 0, 0),
+					randomizePlayerFlowers(11, 0, Pur5, Red5, Blu5, Yel5, Whi5, Gre5, 0, 0, 0, 0, 0, 0),
+					write('Flowers Randomly Generated For All Players'), nl;
+	write('Error Creating Game'), nl.	
+
+randomizePlayerFlowers(Flowers, Total, Purple, Red, Blue, Yellow, White, Green, C1, C2, C3, C4, C5, C6):-
+	random(0, 6, NewFlower),
+	NTotal is Total + 1,
+	(
+	NTotal > Flowers -> finalizeFlowers(Purple, Red, Blue, Yellow, White, Green, C1, C2, C3, C4, C5, C6);
+	NewFlower = 0 -> NCount is C1 + 1,
+						randomizePlayerFlowers(Flowers, NTotal, Purple, Red, Blue, Yellow, White, Green, NCount, C2, C3, C4, C5, C6);
+	NewFlower = 1 -> NCount is C2 + 1,
+						randomizePlayerFlowers(Flowers, NTotal, Purple, Red, Blue, Yellow, White, Green, C1, NCount, C3, C4, C5, C6);
+	NewFlower = 2 -> NCount is C3 + 1,
+						randomizePlayerFlowers(Flowers, NTotal, Purple, Red, Blue, Yellow, White, Green, C1, C2, NCount, C4, C5, C6);
+	NewFlower = 3 -> NCount is C4 + 1,
+						randomizePlayerFlowers(Flowers, NTotal, Purple, Red, Blue, Yellow, White, Green, C1, C2, C3, NCount, C5, C6);
+	NewFlower = 4 -> NCount is C5 + 1,
+						randomizePlayerFlowers(Flowers, NTotal, Purple, Red, Blue, Yellow, White, Green, C1, C2, C3, C4, NCount, C6);
+	NewFlower = 5 -> NCount is C6 + 1,
+						randomizePlayerFlowers(Flowers, NTotal, Purple, Red, Blue, Yellow, White, Green, C1, C2, C3, C4, C5, NCount);
+
+	write('Error Generating Flowers'), nl).
 	
-printRow([]).
-printRow([Head | Tail]):-
-	getCellSymbol(Head, Piece),
-	write(Piece), write(' | '),
-	printRow(Tail).
+finalizeFlowers(Purple, Red, Blue, Yellow, White, Green, C1, C2, C3, C4, C5, C6):-
+	Purple is C1,
+	Red is C2,
+	Blue is C3,
+	Yellow is C4,
+	White is C5,
+	Green is C6.
 	
-	
-%predicados de jogo%
-	
-	CheckNPlayers(Game).
-	CheckIfEmpty(Row,Column,Board).
-	CheckMarcianMove(Row1,Column1,Row2,Column2,Board).
-	CheckAction1(Player,Game).
-	CheckAction2(Player,Game).
-	CheckAction3(Player,Game).
-	CheckAction4(Player,Game).
-	CheckAction5(Player,Game).
-	
-	CountFlowers(Player,Board).
-	PlantFlower(Row,Column, Board).
-	IsLastFlowerPlant(Player).
-	PlantTree(Row, Column, Board).
-	SwapFlowers(Row1,Column1,Row2,Column2,Board).
-	SwapFlowerTree(Row1,Column1,Row2,Column2,Board).
-	MoveFlower(Row1,Column1,Row2,Column2,Board).
-	MoveTree(Row1,Column1,Row2,Column2,Board).
-	MoveMartian(Row1,Column1,Row2,Column2,Board).
-	IsLapDone(Player).
-	RemoveFlowers(Player,Board).
-	
-	
+printPlayerFlowers([Head | Tail], Player, Count):-
+	NCount is Count + 1,
+	(
+	NCount = Player -> getFlowers(Head, Purple, Red, Blue, Yellow, White, Green, 0),
+						write('Player '), write(Player), write('s flowers:'), nl,
+						write('Purple: '), write(Purple), nl,
+						write('Red: '), write(Red), nl,
+						write('Blue: '), write(Blue), nl,
+						write('Yellow: '), write(Yellow), nl,
+						write('White: '), write(White), nl,
+						write('Green: '), write(Green), nl;
+	printPlayerFlowers(Tail, Player, NCount)
+	).
+
+getFlowers([Head | Tail], Purple, Red, Blue, Yellow, White, Green, Count):-
+	NCount is Count + 1,
+	(
+	NCount = 1 -> Purple is Head,
+					getFlowers(Tail, Purple, Red, Blue, Yellow, White, Green, NCount);
+	NCount = 2 -> Red is Head,
+					getFlowers(Tail, Purple, Red, Blue, Yellow, White, Green, NCount);
+	NCount = 3 -> Blue is Head,
+					getFlowers(Tail, Purple, Red, Blue, Yellow, White, Green, NCount);
+	NCount = 4 -> Yellow is Head,
+					getFlowers(Tail, Purple, Red, Blue, Yellow, White, Green, NCount);
+	NCount = 5 -> White is Head,
+					getFlowers(Tail, Purple, Red, Blue, Yellow, White, Green, NCount);
+	NCount = 6 -> Green is Head;
+	write('Error getting player flowers!'), nl
+	).
