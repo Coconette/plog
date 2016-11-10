@@ -2,12 +2,11 @@ chooseOption:-
 	nl,
 	getChar(Input),
 	(
-		Input = '1' -> initGame(1, Game), playGame(Game);
-		Input = '2' -> initGame(2, Game), playGame(Game);
-		Input = '3' -> initGame(3, Game), playGame(Game);
-		Input = '4' -> initGame(4, Game), playGame(Game);
-		Input = '5' -> initGame(5, Game), playGame(Game);
-
+		Input = '1' -> initGame(1, Turn, Board, PlayersInfo), playGame(1, Turn, Board, PlayersInfo);
+		Input = '2' -> initGame(2, Turn, Board, PlayersInfo), playGame(2, Turn, Board, PlayersInfo);
+		Input = '3' -> initGame(3, Turn, Board, PlayersInfo), playGame(3, Turn, Board, PlayersInfo);
+		Input = '4' -> initGame(4, Turn, Board, PlayersInfo), playGame(4, Turn, Board, PlayersInfo);
+		Input = '5' -> initGame(5, Turn, Board, PlayersInfo), playGame(5, Turn, Board, PlayersInfo);
 		nl,
 		write('Error: invalid input.'), nl,
 		read(Input), nl,
@@ -31,7 +30,15 @@ initialMenu:-
 getChar(Input):-
 	get_char(Input),
 	get_char(_).
+
+treeStartMenu(Players, Board, NBoard):-
+	treePlacement(1, Board, XBoard),
+	treePlacement(2, XBoard, YBoard),
+	(
+	Players < 3 -> treePlacement(1, YBoard, NBoard);
+					treePlacement(3, YBoard, NBoard)
+	).
 	
-printStartGameInfo(Players):-
-	nl, write('          Starting a '),
-	write(Players), write(' player game!'), nl.
+treePlacement(Player, Board, NBoard):-
+	write('Player 1, input coords to place tree'), nl,
+	placeObjectOnBoard(Board, NBoard, 'X', 3, 3).

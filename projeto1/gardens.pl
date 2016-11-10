@@ -6,14 +6,10 @@
 gardens:-
 	initialMenu.
 
-initGame(Players, Game):-
-	printStartGameInfo(Players),
-	initialBoard(Board),
+initGame(Players, Turn, Board, PlayersInfo):-
+	initializeBoard(Board),
 	generatePlayersInfo(Players, PlayersInfo),
-	Game = [Players, 1, Board, PlayersInfo],
-	printPlayerFlowers(PlayersInfo, 1, 0),
-	printPlayerFlowers(PlayersInfo, 2, 0),
-	write('done'), nl, !.
+	printAllPlayersFlowers(PlayersInfo, Players, 0), !.
 	
 generatePlayersInfo(Players, PlayersInfo):-
 	Players = 2 -> PlayersInfo = [
@@ -82,17 +78,26 @@ finalizeFlowers(Purple, Red, Blue, Yellow, White, Green, C1, C2, C3, C4, C5, C6)
 	White is C5,
 	Green is C6.
 	
+printAllPlayersFlowers(PlayerInfo, Players, Count):-
+	(
+	Count < Players -> NCount is Count + 1,
+						printPlayerFlowers(PlayerInfo, NCount, 0),
+						printAllPlayersFlowers(PlayerInfo, Players, NCount);
+	NCount is Count + 1
+	).
+	
+
 printPlayerFlowers([Head | Tail], Player, Count):-
 	NCount is Count + 1,
 	(
 	NCount = Player -> getFlowers(Head, Purple, Red, Blue, Yellow, White, Green, 0),
-						write('Player '), write(Player), write('s flowers:'), nl,
-						write('Purple: '), write(Purple), nl,
-						write('Red: '), write(Red), nl,
-						write('Blue: '), write(Blue), nl,
-						write('Yellow: '), write(Yellow), nl,
-						write('White: '), write(White), nl,
-						write('Green: '), write(Green), nl;
+						write('PLAYER '), write(Player), write(' FLOWERS:'), nl,
+						write('   Purple: '), write(Purple),
+						write('   Red: '), write(Red),
+						write('   Blue: '), write(Blue),
+						write('   Yellow: '), write(Yellow),
+						write('   White: '), write(White),
+						write('   Green: '), write(Green), nl;
 	printPlayerFlowers(Tail, Player, NCount)
 	).
 
@@ -112,3 +117,7 @@ getFlowers([Head | Tail], Purple, Red, Blue, Yellow, White, Green, Count):-
 	NCount = 6 -> Green is Head;
 	write('Error getting player flowers!'), nl
 	).
+	
+playGame(Players, Turn, Board, PlayersInfo):-
+	treeStartMenu(Players, Board, NBoard),
+	printBoard(NBoard).

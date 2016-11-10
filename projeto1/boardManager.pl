@@ -15,6 +15,24 @@ getCellSymbol(action3Cell, 'X').
 getCellSymbol(action4Cell, 'Y').
 getCellSymbol(action5Cell, 'Z').
 
+initializeBoard(Board):-
+	Board = [
+	[number0Cell, number1Cell, number2Cell, number3Cell, number4Cell, number5Cell, number6Cell, number7Cell, number8Cell, number9Cell, number0Cell],
+	[number9Cell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, number1Cell],
+	[number8Cell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, number2Cell],
+	[number7Cell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, number3Cell],
+	[number6Cell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, number4Cell],
+	[number5Cell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, number5Cell],
+	[number4Cell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, number6Cell],
+	[number3Cell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, number7Cell],
+	[number2Cell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, number8Cell],
+	[number1Cell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, number9Cell],
+	[number0Cell, number9Cell, number8Cell, number7Cell, number6Cell, number5Cell, number4Cell, number3Cell, number2Cell, number1Cell, number0Cell],
+	[],
+	[action1Cell, action2Cell, action3Cell, action4Cell, action5Cell]
+	],
+	write('Board Successfully Generated'), nl.
+
 initialBoard([
 	[number0Cell, number1Cell, number2Cell, number3Cell, number4Cell, number5Cell, number6Cell, number7Cell, number8Cell, number9Cell, number0Cell],
 	[number9Cell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, emptyCell, number1Cell],
@@ -31,7 +49,6 @@ initialBoard([
 	[action1Cell, action2Cell, action3Cell, action4Cell, action5Cell]]).
 	
 printBoard([]).
-	
 printBoard([Head | Tail]):-
 	write('| '),
 	printRow(Head), nl,
