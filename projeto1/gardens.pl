@@ -3,6 +3,12 @@
 :- include('boardManager.pl').
 
 
+test:-
+	initializeBoard(Board),
+	printBoard(Board),nl, nl,
+	placeObjectOnBoard(Board, NewBoard, 'T', 3, 3),
+	printBoard(NewBoard).
+
 gardens:-
 	initialMenu.
 
