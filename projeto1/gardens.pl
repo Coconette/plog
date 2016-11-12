@@ -11,9 +11,9 @@ gardens:-
 	initialMenu.
 
 initGame(Players, Turn, Board, PlayersInfo):-
+	Turn is 1,
 	initializeBoard(Board),
-	generatePlayersInfo(Players, PlayersInfo),
-	printAllPlayersFlowers(PlayersInfo, Players, 0), !.
+	generatePlayersInfo(Players, PlayersInfo), !.
 	
 generatePlayersInfo(Players, PlayersInfo):-
 	Players = 2 -> PlayersInfo = [
@@ -95,13 +95,13 @@ printPlayerFlowers([Head | Tail], Player, Count):-
 	NCount is Count + 1,
 	(
 	NCount = Player -> getFlowers(Head, Purple, Red, Blue, Yellow, White, Green, 0),
-						write('PLAYER '), write(Player), write(' FLOWERS:'), nl,
-						write('   Purple: '), write(Purple),
-						write('   Red: '), write(Red),
-						write('   Blue: '), write(Blue),
-						write('   Yellow: '), write(Yellow),
-						write('   White: '), write(White),
-						write('   Green: '), write(Green), nl, nl;
+						write('    You still have:'), nl,
+						write('       $: '), write(Purple),
+						write('       &: '), write(Red),
+						write('       #: '), write(Blue),
+						write('       *: '), write(Yellow),
+						write('       +: '), write(White),
+						write('       @: '), write(Green), nl, nl;
 	printPlayerFlowers(Tail, Player, NCount)
 	).
 
@@ -123,5 +123,10 @@ getFlowers([Head | Tail], Purple, Red, Blue, Yellow, White, Green, Count):-
 	).
 	
 playGame(Players, Turn, Board, PlayersInfo):-
-	treeStartMenu(Players, Board, NBoard),
-	printBoard(NBoard).
+	playMenu(Turn, Board, PlayersInfo, NBoard, NPlayersInfo),
+	NTurn is Turn + 1,
+	(
+	NTurn > Players -> NTurn is 1,
+					printBoard(Board);
+	printBoard(Board)
+	).

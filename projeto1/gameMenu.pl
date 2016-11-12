@@ -17,11 +17,21 @@ chooseOption:-
 	getChar(Input),
 	discardInputChar,
 	(
-		Input = '1' -> initGame(1, Turn, Board, PlayersInfo), playGame(1, Turn, Board, PlayersInfo);
-		Input = '2' -> initGame(2, Turn, Board, PlayersInfo), playGame(2, Turn, Board, PlayersInfo);
-		Input = '3' -> initGame(3, Turn, Board, PlayersInfo), playGame(3, Turn, Board, PlayersInfo);
-		Input = '4' -> initGame(4, Turn, Board, PlayersInfo), playGame(4, Turn, Board, PlayersInfo);
-		Input = '5' -> initGame(5, Turn, Board, PlayersInfo), playGame(5, Turn, Board, PlayersInfo);
+		Input = '1' -> initGame(1, Turn, Board, PlayersInfo),		
+					treeStartMenu(1, Board, NBoard),
+					playGame(1, Turn, NBoard, PlayersInfo);
+		Input = '2' -> initGame(2, Turn, Board, PlayersInfo),		
+					treeStartMenu(2, Board, NBoard),
+					playGame(2, Turn, NBoard, PlayersInfo);
+		Input = '3' -> initGame(3, Turn, Board, PlayersInfo),		
+					treeStartMenu(3, Board, NBoard),
+					playGame(3, Turn, NBoard, PlayersInfo);
+		Input = '4' -> initGame(4, Turn, Board, PlayersInfo),		
+					treeStartMenu(4, Board, NBoard),
+					playGame(4, Turn, NBoard, PlayersInfo);
+		Input = '5' -> initGame(5, Turn, Board, PlayersInfo),		
+					treeStartMenu(5, Board, NBoard),
+					playGame(5, Turn, NBoard, PlayersInfo);
 		nl,
 		write('Error: invalid input.'), nl
 	).
@@ -35,10 +45,16 @@ treeStartMenu(Players, Board, NBoard):-
 	).
 	
 treePlacement(Player, Board, NBoard):-
-	write('Player '), write(Player), write(' input coords to place tree [Row:Col] and press [ENTER]'), nl,
+	write('Player '), write(Player), write(' input coords to place tree [Col:Row] and press [ENTER]'), nl,
 	inputCoords(Row, Col),
 	placeObjectOnBoard(Board, NBoard, 'X', Row, Col),
 	printBoard(NBoard), nl.
+
+playMenu(Turn, Board, PlayerInfo, NBoard, NPlayersInfo):-
+	write('It is player '), write(Turn), write(' turn. Please select an option:'), nl,
+	write('1. Place a flower on the board'), nl,
+	printPlayerFlowers(PlayerInfo, Turn, 0).
+
 		
 inputCoords(SrcRow, SrcCol):-
 	% read row
