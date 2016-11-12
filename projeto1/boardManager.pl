@@ -37,8 +37,7 @@ placeObjectOnBoard([Head | RemainingRows], [Head | NewRemainingRows], Object, Co
 	placeObjectOnBoard(RemainingRows, NewRemainingRows, Object, Column, NewRow)
 	).
 
-placeObjectOnRow([H|L], [Object|L], Object, 0):-
-	write('object replaced'), nl.
+placeObjectOnRow([H|L], [Object|L], Object, 0).
 placeObjectOnRow([H|L], [H|NL], Object, Column):-
 	Column > 0,
 	NewCol is Column-1,

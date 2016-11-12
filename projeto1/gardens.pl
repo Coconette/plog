@@ -2,12 +2,10 @@
 :- include('gameMenu.pl').
 :- include('boardManager.pl').
 
-
 test:-
-	initializeBoard(Board),
-	printBoard(Board),nl, nl,
-	placeObjectOnBoard(Board, NewBoard, 'T', 3, 3),
-	printBoard(NewBoard).
+	write('Input Coords: '), nl,
+	inputCoords(Row, Col),
+	write('Read: '), write(Row), write(' and '), write(Col), nl.
 
 gardens:-
 	initialMenu.
@@ -23,7 +21,7 @@ generatePlayersInfo(Players, PlayersInfo):-
 							[Pur2, Red2, Blu2, Yel2, Whi2, Gre2, 0, 0, 0]],
 					randomizePlayerFlowers(27, 0, Pur1, Red1, Blu1, Yel1, Whi1, Gre1, 0, 0, 0, 0, 0, 0),
 					randomizePlayerFlowers(27, 0, Pur2, Red2, Blu2, Yel2, Whi2, Gre2, 0, 0, 0, 0, 0, 0),
-					write('Flowers Randomly Generated For All Players'), nl;
+					write('Flowers Successfully Generated'),nl, nl;
 	Players = 3 -> PlayersInfo = [
 							[Pur1, Red1, Blu1, Yel1, Whi1, Gre1, 0, 0, 0],
 							[Pur2, Red2, Blu2, Yel2, Whi2, Gre2, 0, 0, 0],
@@ -31,7 +29,7 @@ generatePlayersInfo(Players, PlayersInfo):-
 					randomizePlayerFlowers(18, 0, Pur1, Red1, Blu1, Yel1, Whi1, Gre1, 0, 0, 0, 0, 0, 0),
 					randomizePlayerFlowers(18, 0, Pur2, Red2, Blu2, Yel2, Whi2, Gre2, 0, 0, 0, 0, 0, 0),
 					randomizePlayerFlowers(18, 0, Pur3, Red3, Blu3, Yel3, Whi3, Gre3, 0, 0, 0, 0, 0, 0),
-					write('Flowers Randomly Generated For All Players'), nl;
+					write('Flowers Successfully Generated'), nl, nl;
 	Players = 4 -> PlayersInfo = [
 							[Pur1, Red1, Blu1, Yel1, Whi1, Gre1, 0, 0, 0],
 							[Pur2, Red2, Blu2, Yel2, Whi2, Gre2, 0, 0, 0],
@@ -41,7 +39,7 @@ generatePlayersInfo(Players, PlayersInfo):-
 					randomizePlayerFlowers(14, 0, Pur2, Red2, Blu2, Yel2, Whi2, Gre2, 0, 0, 0, 0, 0, 0),
 					randomizePlayerFlowers(14, 0, Pur3, Red3, Blu3, Yel3, Whi3, Gre3, 0, 0, 0, 0, 0, 0),
 					randomizePlayerFlowers(14, 0, Pur4, Red4, Blu4, Yel4, Whi4, Gre4, 0, 0, 0, 0, 0, 0),
-					write('Flowers Randomly Generated For All Players'), nl;
+					write('Flowers Successfully Generated'), nl, nl;
 	Players = 3 -> PlayersInfo = [
 							[Pur1, Red1, Blu1, Yel1, Whi1, Gre1, 0, 0, 0],
 							[Pur2, Red2, Blu2, Yel2, Whi2, Gre2, 0, 0, 0],
@@ -53,7 +51,7 @@ generatePlayersInfo(Players, PlayersInfo):-
 					randomizePlayerFlowers(11, 0, Pur3, Red3, Blu3, Yel3, Whi3, Gre3, 0, 0, 0, 0, 0, 0),
 					randomizePlayerFlowers(11, 0, Pur4, Red4, Blu4, Yel4, Whi4, Gre4, 0, 0, 0, 0, 0, 0),
 					randomizePlayerFlowers(11, 0, Pur5, Red5, Blu5, Yel5, Whi5, Gre5, 0, 0, 0, 0, 0, 0),
-					write('Flowers Randomly Generated For All Players'), nl;
+					write('Flowers Successfully Generated'), nl, nl;
 	write('Error Creating Game'), nl.	
 
 randomizePlayerFlowers(Flowers, Total, Purple, Red, Blue, Yellow, White, Green, C1, C2, C3, C4, C5, C6):-
@@ -103,7 +101,7 @@ printPlayerFlowers([Head | Tail], Player, Count):-
 						write('   Blue: '), write(Blue),
 						write('   Yellow: '), write(Yellow),
 						write('   White: '), write(White),
-						write('   Green: '), write(Green), nl;
+						write('   Green: '), write(Green), nl, nl;
 	printPlayerFlowers(Tail, Player, NCount)
 	).
 
