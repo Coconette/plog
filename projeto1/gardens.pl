@@ -1,7 +1,14 @@
 :- use_module(library(random)).
 :- include('gameMenu.pl').
 :- include('boardManager.pl').
+:- include('update.pl').
+:- include('actions.pl').
 
+test:-
+	initializeBoard(Board),
+	getObjectOnBoard(Board, Object, 10, 4),
+	write('TEST: '), write(Object), nl.
+	
 gardens:-
 	initialMenu.
 
@@ -35,7 +42,7 @@ generatePlayersInfo(Players, PlayersInfo):-
 					randomizePlayerFlowers(14, 0, Pur3, Red3, Blu3, Yel3, Whi3, Gre3, 0, 0, 0, 0, 0, 0),
 					randomizePlayerFlowers(14, 0, Pur4, Red4, Blu4, Yel4, Whi4, Gre4, 0, 0, 0, 0, 0, 0),
 					write('Flowers Successfully Generated'), nl, nl;
-	Players = 3 -> PlayersInfo = [
+	Players = 5 -> PlayersInfo = [
 							[Pur1, Red1, Blu1, Yel1, Whi1, Gre1, 0, 0, 0],
 							[Pur2, Red2, Blu2, Yel2, Whi2, Gre2, 0, 0, 0],
 							[Pur3, Red3, Blu3, Yel3, Whi3, Gre3, 0, 0, 0],
@@ -108,13 +115,16 @@ getInfo([Head | Tail], Purple, Red, Blue, Yellow, White, Green, Action, Position
 	).	
 
 playGame(Players, Turn, Board, PlayersInfo):-
-	turnMenu(Turn, Board, PlayersInfo, NBoard, NPlayersInfo),
+	turnMenu(Players, Turn, Board, PlayersInfo, NBoard, NPlayersInfo),
 	printBoard(NBoard),
 	write('Turn successful'), nl,
 	(
-	Turn = Players -> write('no'), nl, playGame(Players, 1, NBoard, NPlayersInfo);
+	Turn = Players -> write('back to player1'), nl, playGame(Players, 1, NBoard, NPlayersInfo);
 	Turn = 0 -> write('Game is over.');
-	write('yes1'), nl,
 	NTurn is Turn + 1,
 	playGame(Players, NTurn, NBoard, PlayersInfo)
 	).
+	
+getScore(Board, Object, Row, Col, Dir, Counter, Score):-
+	Score is 1.
+	

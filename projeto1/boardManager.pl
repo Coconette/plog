@@ -31,8 +31,6 @@ placeObjectOnBoard([Head | RemainingRows], [NewRow | RemainingRows], Object, Col
 	placeObjectOnRow(Head, NewRow, Object, Column).
 placeObjectOnBoard([Head | RemainingRows], [Head | NewRemainingRows], Object, Column, Row):-
 	(
-	Row = 0 ->	write('That is not an acceptable row');
-	Row = 10 -> write('That is not an acceptable row');
 	NewRow is Row-1,
 	placeObjectOnBoard(RemainingRows, NewRemainingRows, Object, Column, NewRow)
 	).
@@ -42,3 +40,16 @@ placeObjectOnRow([H|L], [H|NL], Object, Column):-
 	Column > 0,
 	NewCol is Column-1,
 	placeObjectOnRow(L, NL, Object, NewCol).
+	
+getObjectOnBoard([Head | Tail], Object, Column, 0):-
+	getObjectOnRow(Head, Object, Column).
+getObjectOnBoard([Head | Tail], Object, Column, Row):-
+	NewRow is Row-1,
+	getObjectOnBoard(Tail, Object, Column, NewRow).
+	
+getObjectOnRow([Head | Tail], Object, 0):-
+	Object = Head.
+getObjectOnRow([Head | Tail], Object, Column):-
+	Column > 0,
+	NewCol is Column - 1,
+	getObjectOnRow(Tail, Object, NewCol).
