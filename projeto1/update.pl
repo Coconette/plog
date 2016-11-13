@@ -1,10 +1,125 @@
-updatePosition(Position, Laps, Score, NPosition, NLaps):-
-	XPosition is Position + Score,
+updatePosition(Player, Position, Laps, Score, NPosition, NLaps, Board, NBoard, Counter, TrueCount):-
+	write('TC: '), write(TrueCount), nl,
+	write('Counter: '), write(Counter), nl,
+	NTrueCount is TrueCount + 1,
+	getPositionCoords(Position, OldRow, OldCol, OldObject),
 	(
-	XPosition > 39 -> NPosition is XPosition - 40,
-						NLaps is Laps + 1;
-	NPosition is XPosition,
-	NLaps is Laps
+	Score > 0 ->(
+				Player = 1 -> PlayerObject = 'A';
+				Player = 2 -> PlayerObject = 'B';
+				Player = 3 -> PlayerObject = 'C';
+				Player = 4 -> PlayerObject = 'D';
+				PlayerObject = 'E'
+				),
+				(
+				Counter = Score -> XPosition is Position + TrueCount,
+								(
+								XPosition > 39 -> NPosition is NPosition - 40,
+												NLaps is Laps + 1;
+								NewPosition is XPosition
+								),
+								getPositionCoords(NewPosition, NewRow, NewCol, NewObject),
+								placeObjectOnBoard(Board, XBoard, PlayerObject, NewCol, NewRow),
+								placeObjectOnBoard(XBoard, NBoard, OldObject, OldCol, OldRow),
+								NPosition is NewPosition;
+				Counter < Score ->	XPosition is Position + NTrueCount,
+								(
+								XPosition > 39 -> YPosition is XPosition - 40,
+												YLaps is Laps + 1;
+								YPosition is XPosition
+								),
+								getPositionCoords(YPosition, NewRow, NewCol, Obj),
+								getObjectOnBoard(Board, Object, NewCol, NewRow),
+								write(Object), nl,
+								(
+								Object = '1' -> NCounter is Counter + 1,
+												updatePosition(Player, Position, YLaps, Score, NPosition, NLaps, Board, NBoard, NCounter, NTrueCount);
+								Object = '2' -> NCounter is Counter + 1,
+												updatePosition(Player, Position, YLaps, Score, NPosition, NLaps, Board, NBoard, NCounter, NTrueCount);
+								Object = '3' -> NCounter is Counter + 1,
+												updatePosition(Player, Position, YLaps, Score, NPosition, NLaps, Board, NBoard, NCounter, NTrueCount);
+								Object = '4' -> NCounter is Counter + 1,
+												updatePosition(Player, Position, YLaps, Score, NPosition, NLaps, Board, NBoard, NCounter, NTrueCount);
+								Object = '5' -> NCounter is Counter + 1,
+												updatePosition(Player, Position, YLaps, Score, NPosition, NLaps, Board, NBoard, NCounter, NTrueCount);
+								Object = '6' -> NCounter is Counter + 1,
+												updatePosition(Player, Position, YLaps, Score, NPosition, NLaps, Board, NBoard, NCounter, NTrueCount);
+								Object = '7' -> NCounter is Counter + 1,
+												updatePosition(Player, Position, YLaps, Score, NPosition, NLaps, Board, NBoard, NCounter, NTrueCount);
+								Object = '8' -> NCounter is Counter + 1,
+												updatePosition(Player, Position, YLaps, Score, NPosition, NLaps, Board, NBoard, NCounter, NTrueCount);
+								Object = '9' -> NCounter is Counter + 1,
+												updatePosition(Player, Position, YLaps, Score, NPosition, NLaps, Board, NBoard, NCounter, NTrueCount);
+								Object = '0' -> NCounter is Counter + 1,
+												updatePosition(Player, Position, YLaps, Score, NPosition, NLaps, Board, NBoard, NCounter, NTrueCount);
+								updatePosition(Player, Position, YLaps, Score, NPosition, NLaps, Board, NBoard, Counter, NTrueCount)
+							);
+					write('Error. FDS')
+					);
+	Score = 0 -> write('Score is 0'), nl
+	).
+	
+getPositionCoords(Position, Row, Column, Object):-
+	(
+	Position < 10 -> Column is 10,
+					Row is Position,
+					(
+					Position = 0 -> Object = '0';
+					Position = 1 -> Object = '1';
+					Position = 2 -> Object = '2';
+					Position = 3 -> Object = '3';
+					Position = 4 -> Object = '4';
+					Position = 5 -> Object = '5';
+					Position = 6 -> Object = '6';
+					Position = 7 -> Object = '7';
+					Position = 8 -> Object = '8';
+					Object = '9'
+					);
+	Position > 29 -> Row is 0,
+					Column is Position - 30,
+					(
+					Position = 30 -> Object = '0';
+					Position = 31 -> Object = '1';
+					Position = 32 -> Object = '2';
+					Position = 33 -> Object = '3';
+					Position = 34 -> Object = '4';
+					Position = 35 -> Object = '5';
+					Position = 36 -> Object = '6';
+					Position = 37 -> Object = '7';
+					Position = 38 -> Object = '8';
+					Object = '9'
+					);
+	Position > 19 -> Column is 0,
+					Helper is Position - 20,
+					Row is 10 - Helper,
+					(
+					Position = 20 -> Object = '0';
+					Position = 21 -> Object = '9';
+					Position = 22 -> Object = '8';
+					Position = 23 -> Object = '7';
+					Position = 24 -> Object = '6';
+					Position = 25 -> Object = '5';
+					Position = 26 -> Object = '4';
+					Position = 27 -> Object = '3';
+					Position = 28 -> Object = '2';
+					Object = '1'
+					);
+	Position < 20 -> Row is 10,
+					Helper is Position - 10,
+					Column is 10 - Helper,
+					(
+					Position = 10 -> Object = '0';
+					Position = 11 -> Object = '9';
+					Position = 12 -> Object = '8';
+					Position = 13 -> Object = '7';
+					Position = 14 -> Object = '6';
+					Position = 15 -> Object = '5';
+					Position = 16 -> Object = '4';
+					Position = 17 -> Object = '3';
+					Position = 18 -> Object = '2';
+					Object = '9'
+					);
+	write('Error. Position not accepted.')
 	).
 
 updatePlayersInfo(Players, PlayersInfo, Turn, Purple, Red, Blue, Yellow, White, Green, Action, Position, Lap, NPlayersInfo):-

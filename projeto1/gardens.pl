@@ -117,12 +117,11 @@ getInfo([Head | Tail], Purple, Red, Blue, Yellow, White, Green, Action, Position
 playGame(Players, Turn, Board, PlayersInfo):-
 	turnMenu(Players, Turn, Board, PlayersInfo, NBoard, NPlayersInfo),
 	printBoard(NBoard),
-	write('Turn successful'), nl,
 	(
-	Turn = Players -> write('back to player1'), nl, playGame(Players, 1, NBoard, NPlayersInfo);
-	Turn = 0 -> write('Game is over.');
+	Turn = Players -> NTurn is 1,
+					playGame(Players, NTurn, NBoard, NPlayersInfo);
 	NTurn is Turn + 1,
-	playGame(Players, NTurn, NBoard, PlayersInfo)
+	playGame(Players, NTurn, NBoard, NPlayersInfo)
 	).
 	
 getScore(Board, Object, Row, Col, Dir, Counter, Score):-
