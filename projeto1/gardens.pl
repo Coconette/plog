@@ -2,11 +2,6 @@
 :- include('gameMenu.pl').
 :- include('boardManager.pl').
 
-test:-
-	write('Input Coords: '), nl,
-	inputCoords(Row, Col),
-	write('Read: '), write(Row), write(' and '), write(Col), nl.
-
 gardens:-
 	initialMenu.
 
@@ -80,53 +75,46 @@ finalizeFlowers(Purple, Red, Blue, Yellow, White, Green, C1, C2, C3, C4, C5, C6)
 	Blue is C3,
 	Yellow is C4,
 	White is C5,
-	Green is C6.
-	
-printAllPlayersFlowers(PlayerInfo, Players, Count):-
-	(
-	Count < Players -> NCount is Count + 1,
-						printPlayerFlowers(PlayerInfo, NCount, 0),
-						printAllPlayersFlowers(PlayerInfo, Players, NCount);
-	NCount is Count + 1
-	).
-	
+	Green is C6.	
 
-printPlayerFlowers([Head | Tail], Player, Count):-
+getPlayerInfo([Head | Tail], Player, Purple, Red, Blue, Yellow, White, Green, Action, Position, Laps, Count):-
 	NCount is Count + 1,
 	(
-	NCount = Player -> getFlowers(Head, Purple, Red, Blue, Yellow, White, Green, 0),
-						write('    You still have:'), nl,
-						write('       $: '), write(Purple),
-						write('       &: '), write(Red),
-						write('       #: '), write(Blue),
-						write('       *: '), write(Yellow),
-						write('       +: '), write(White),
-						write('       @: '), write(Green), nl, nl;
-	printPlayerFlowers(Tail, Player, NCount)
+	NCount = Player -> getInfo(Head, Purple, Red, Blue, Yellow, White, Green, Action, Position, Laps, 0);
+	getPlayerInfo(Tail, Player, Purple, Red, Blue, Yellow, White, Green, Action, Position, Laps, NCount)
 	).
 
-getFlowers([Head | Tail], Purple, Red, Blue, Yellow, White, Green, Count):-
+getInfo([Head | Tail], Purple, Red, Blue, Yellow, White, Green, Action, Position, Laps, Count):-
 	NCount is Count + 1,
 	(
 	NCount = 1 -> Purple is Head,
-					getFlowers(Tail, Purple, Red, Blue, Yellow, White, Green, NCount);
+					getInfo(Tail, Purple, Red, Blue, Yellow, White, Green, Action, Position, Laps, NCount);
 	NCount = 2 -> Red is Head,
-					getFlowers(Tail, Purple, Red, Blue, Yellow, White, Green, NCount);
+					getInfo(Tail, Purple, Red, Blue, Yellow, White, Green, Action, Position, Laps, NCount);
 	NCount = 3 -> Blue is Head,
-					getFlowers(Tail, Purple, Red, Blue, Yellow, White, Green, NCount);
+					getInfo(Tail, Purple, Red, Blue, Yellow, White, Green, Action, Position, Laps, NCount);
 	NCount = 4 -> Yellow is Head,
-					getFlowers(Tail, Purple, Red, Blue, Yellow, White, Green, NCount);
+					getInfo(Tail, Purple, Red, Blue, Yellow, White, Green, Action, Position, Laps, NCount);
 	NCount = 5 -> White is Head,
-					getFlowers(Tail, Purple, Red, Blue, Yellow, White, Green, NCount);
-	NCount = 6 -> Green is Head;
-	write('Error getting player flowers!'), nl
-	).
-	
+					getInfo(Tail, Purple, Red, Blue, Yellow, White, Green, Action, Position, Laps, NCount);
+	NCount = 6 -> Green is Head,
+					getInfo(Tail, Purple, Red, Blue, Yellow, White, Green, Action, Position, Laps, NCount);
+	NCount = 7 -> Action is Head,
+					getInfo(Tail, Purple, Red, Blue, Yellow, White, Green, Action, Position, Laps, NCount);
+	NCount = 8 -> Position is Head,
+					getInfo(Tail, Purple, Red, Blue, Yellow, White, Green, Action, Position, Laps, NCount);
+	NCount = 9 -> Laps is Head;
+	write('Error getting player information!'), nl
+	).	
+
 playGame(Players, Turn, Board, PlayersInfo):-
-	playMenu(Turn, Board, PlayersInfo, NBoard, NPlayersInfo),
-	NTurn is Turn + 1,
+	turnMenu(Turn, Board, PlayersInfo, NBoard, NPlayersInfo),
+	printBoard(NBoard),
+	write('Turn successful'), nl,
 	(
-	NTurn > Players -> NTurn is 1,
-					printBoard(Board);
-	printBoard(Board)
+	Turn = Players -> write('no'), nl, playGame(Players, 1, NBoard, NPlayersInfo);
+	Turn = 0 -> write('Game is over.');
+	write('yes1'), nl,
+	NTurn is Turn + 1,
+	playGame(Players, NTurn, NBoard, PlayersInfo)
 	).
