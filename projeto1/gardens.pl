@@ -3,17 +3,11 @@
 :- include('boardManager.pl').
 :- include('update.pl').
 :- include('actions.pl').
-
-test:-
-	initializeBoard(Board),
-	getObjectOnBoard(Board, Object, 10, 4),
-	write('TEST: '), write(Object), nl.
 	
 gardens:-
 	initialMenu.
 
-initGame(Players, Turn, Board, PlayersInfo):-
-	Turn is 1,
+initGame(Players, Board, PlayersInfo):-
 	initializeBoard(Board),
 	generatePlayersInfo(Players, PlayersInfo), !.
 	
@@ -118,12 +112,14 @@ playGame(Players, Turn, Board, PlayersInfo):-
 	turnMenu(Players, Turn, Board, PlayersInfo, NBoard, NPlayersInfo),
 	printBoard(NBoard),
 	(
-	Turn = Players -> NTurn is 1,
-					playGame(Players, NTurn, NBoard, NPlayersInfo);
-	NTurn is Turn + 1,
+	Turn = Players -> write('test'), playGame(Players, 1, NBoard, NPlayersInfo);
+	increment(Turn, NTurn),
 	playGame(Players, NTurn, NBoard, NPlayersInfo)
 	).
 	
 getScore(Board, Object, Row, Col, Dir, Counter, Score):-
 	Score is 1.
+	
+increment(Num1, Num2):-
+	Num2 is Num1 + 1.
 	

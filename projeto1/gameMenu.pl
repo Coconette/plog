@@ -17,21 +17,21 @@ chooseOption:-
 	getChar(Input),
 	discardInputChar,
 	(
-		Input = '1' -> initGame(1, Turn, Board, PlayersInfo),		
+		Input = '1' -> initGame(1, Board, PlayersInfo),		
 					treeStartMenu(1, Board, NBoard),
-					playGame(1, Turn, NBoard, PlayersInfo);
-		Input = '2' -> initGame(2, Turn, Board, PlayersInfo),		
+					playGame(1, 1, NBoard, PlayersInfo);
+		Input = '2' -> initGame(2, Board, PlayersInfo),		
 					treeStartMenu(2, Board, NBoard),
-					playGame(2, Turn, NBoard, PlayersInfo);
-		Input = '3' -> initGame(3, Turn, Board, PlayersInfo),		
+					playGame(2, 1, NBoard, PlayersInfo);
+		Input = '3' -> initGame(3, Board, PlayersInfo),		
 					treeStartMenu(3, Board, NBoard),
-					playGame(3, Turn, NBoard, PlayersInfo);
-		Input = '4' -> initGame(4, Turn, Board, PlayersInfo),		
+					playGame(3, 1, NBoard, PlayersInfo);
+		Input = '4' -> initGame(4, Board, PlayersInfo),		
 					treeStartMenu(4, Board, NBoard),
-					playGame(4, Turn, NBoard, PlayersInfo);
-		Input = '5' -> initGame(5, Turn, Board, PlayersInfo),		
+					playGame(4, 1, NBoard, PlayersInfo);
+		Input = '5' -> initGame(5, Board, PlayersInfo),		
 					treeStartMenu(5, Board, NBoard),
-					playGame(5, Turn, NBoard, PlayersInfo);
+					playGame(5, 1, NBoard, PlayersInfo);
 		nl,
 		write('Error: invalid input.'), nl
 	).
@@ -52,6 +52,7 @@ treePlacement(Player, Board, NBoard):-
 	
 		
 actionMenu(Players, Turn, Board, NBoard, PlayersInfo, NPlayersInfo):-
+	getPlayerInfo(PlayersInfo, Turn, Purple, Red, Blue, Yellow, White, Green, Action, Position, Laps, 0),
 	write('MAKE AN ACTION'), nl,
 	write('Which action do you want to use?'), nl,
 	getObjectOnBoard(Board, ActionOne, 0, 12),
@@ -72,9 +73,9 @@ actionMenu(Players, Turn, Board, NBoard, PlayersInfo, NPlayersInfo):-
 	getChar(Input), discardInputChar,
 	(
 	Input = '1' -> (
-					ActionOne = '-' -> write('This action has already been used.'), nl,
-									 actionMenu(Players, Turn, Board, NBoard, PlayersInfo, NPlayersInfo);
-					firstAction(Players, Turn, Board, NBoard, PlayersInfo, NPlayersInfo)
+					ActionOne = 'V' -> firstAction(Players, Turn, Board, NBoard, PlayersInfo, NPlayersInfo);					
+					write('This action has already been used.'), nl,
+					actionMenu(Players, Turn, Board, NBoard, PlayersInfo, NPlayersInfo)
 					);
 	Input = '2' -> (
 					ActionTwo = '-' -> write('This action has already been used.'), nl,
@@ -94,7 +95,9 @@ actionMenu(Players, Turn, Board, NBoard, PlayersInfo, NPlayersInfo):-
 	Input = '5' -> (
 					ActionFive = '-' -> write('This action has already been used.'), nl,
 									 actionMenu(Players, Turn, Board, NBoard, PlayersInfo, NPlayersInfo);
-					fifthAction(Players, Turn, Board, NBoard, PlayersInfo, NPlayersInfo)
+					updatePosition(Turn, Position, Laps, 5, NPosition, NLaps, Board, NBoard, 0, 0),
+					updatePlayersInfo(Players, PlayersInfo, Turn, Purple, Red, Blue, Yellow, White, Green, 1, NPosition, NLaps, NPlayersInfo),
+					write('Moved 5 spaces'), nl
 					);
 	write('Invalid input.')
 	).
@@ -126,10 +129,10 @@ flowerPlacementMenu(Players, Turn, Board, NBoard, PlayersInfo, NPlayersInfo):-
 	Input = '2' -> (
 					Red > 0 -> write('Input coords to place & flower'), nl,
 								inputCoords(Row, Col),
-								placeObjectOnBoard(Board, NBoard, '&', Row, Col),
+								placeObjectOnBoard(Board, XBoard, '&', Row, Col),
 								getScore(NBoard, '&', Row, Col, 0, 0, Score),
 								write('You scored '), write(Score), write(' points this turn.'), nl,
-								updatePosition(Turn, Position, Laps, Score, NPosition, NLaps, Board, NBoard, 0, 1),
+								updatePosition(Turn, Position, Laps, Score, NPosition, NLaps, XBoard, NBoard, 0, 1),
 								NRed is Red - 1,
 								updatePlayersInfo(Players, PlayersInfo, Turn, Purple, NRed, Blue, Yellow, White, Green, Action, NPosition, NLaps, NPlayersInfo);
 					write('You have no & flowers left. Please try again.'),
@@ -138,10 +141,10 @@ flowerPlacementMenu(Players, Turn, Board, NBoard, PlayersInfo, NPlayersInfo):-
 	Input = '3' -> (
 					Blue > 0 -> write('Input coords to place # flower'), nl,
 								inputCoords(Row, Col),
-								placeObjectOnBoard(Board, NBoard, '#', Row, Col),
+								placeObjectOnBoard(Board, XBoard, '#', Row, Col),
 								getScore(NBoard, '#', Row, Col, 0, 0, Score),
 								write('You scored '), write(Score), write(' points this turn.'), nl,
-								updatePosition(Turn, Position, Laps, Score, NPosition, NLaps, Board, NBoard, 0, 1),
+								updatePosition(Turn, Position, Laps, Score, NPosition, NLaps, XBoard, NBoard, 0, 1),
 								NBlue is Blue - 1,
 								updatePlayersInfo(Players, PlayersInfo, Turn, Purple, Red, NBlue, Yellow, White, Green, Action, NPosition, NLaps, NPlayersInfo);
 					write('You have no # flowers left. Please try again.'),
@@ -150,10 +153,10 @@ flowerPlacementMenu(Players, Turn, Board, NBoard, PlayersInfo, NPlayersInfo):-
 	Input = '4' -> (
 					Yellow > 0 -> write('Input coords to place * flower'), nl,
 								inputCoords(Row, Col),
-								placeObjectOnBoard(Board, NBoard, '*', Row, Col),
+								placeObjectOnBoard(Board, XBoard, '*', Row, Col),
 								getScore(NBoard, '+', Row, Col, 0, 0, Score),
 								write('You scored '), write(Score), write(' points this turn.'), nl,
-								updatePosition(Turn, Position, Laps, Score, NPosition, NLaps, Board, NBoard, 0, 1),
+								updatePosition(Turn, Position, Laps, Score, NPosition, NLaps, XBoard, NBoard, 0, 1),
 								NYellow is Yellow - 1,
 								updatePlayersInfo(Players, PlayersInfo, Turn, Purple, Red, Blue, NYellow, White, Green, Action, NPosition, NLaps, NPlayersInfo);
 					write('You have no * flowers left. Please try again.'),
@@ -162,10 +165,10 @@ flowerPlacementMenu(Players, Turn, Board, NBoard, PlayersInfo, NPlayersInfo):-
 	Input = '5' -> (
 					White > 0 -> write('Input coords to place + flower'), nl,
 								inputCoords(Row, Col),
-								placeObjectOnBoard(Board, NBoard, '+', Row, Col),
+								placeObjectOnBoard(Board, XBoard, '+', Row, Col),
 								getScore(NBoard, '+', Row, Col, 0, 0, Score),
 								write('You scored '), write(Score), write(' points this turn.'), nl,
-								updatePosition(Turn, Position, Laps, Score, NPosition, NLaps, Board, NBoard, 0, 1),
+								updatePosition(Turn, Position, Laps, Score, NPosition, NLaps, XBoard, NBoard, 0, 1),
 								NWhite is White - 1,
 								updatePlayersInfo(Players, PlayersInfo, Turn, Purple, Red, Blue, Yellow, NWhite, Green, Action, NPosition, NLaps, NPlayersInfo);
 					write('You have no + flowers left. Please try again.'),
@@ -174,10 +177,10 @@ flowerPlacementMenu(Players, Turn, Board, NBoard, PlayersInfo, NPlayersInfo):-
 	Input = '6' -> (
 					Green > 0 -> write('Input coords to place @ flower'), nl,
 								inputCoords(Row, Col),
-								placeObjectOnBoard(Board, NBoard, '@', Row, Col),
+								placeObjectOnBoard(Board, XBoard, '@', Row, Col),
 								getScore(NBoard, '@', Row, Col, 0, 0, Score),
 								write('You scored '), write(Score), write(' points this turn.'), nl,
-								updatePosition(Turn, Position, Laps, Score, NPosition, NLaps, Board, NBoard, 0, 1),
+								updatePosition(Turn, Position, Laps, Score, NPosition, NLaps, XBoard, NBoard, 0, 1),
 								NGreen is Green - 1,
 								updatePlayersInfo(Players, PlayersInfo, Turn, Purple, Red, Blue, Yellow, White, NGreen, Action, NPosition, NLaps, NPlayersInfo);
 					write('You have no @ flowers left. Please try again.'),
@@ -198,7 +201,7 @@ turnMenu(Players, Turn, Board, PlayersInfo, NBoard, NPlayersInfo):-
 					Players > 2 -> (
 									Action = 0 -> actionMenu(Players, Turn, Board, NBoard, PlayersInfo, NPlayersInfo);
 									write('You already used an action.'), nl,
-									turnMenu(Players, Turn, Board, PlayersInfo, NBoard, NPlayersInfo)
+									turnMenu(Players, Turn, Board, PlayersInfo, NBoard)
 									);
 					Players = 2 -> (
 									Action < 2 -> actionMenu(Players, Turn, Board, NBoard, PlayersInfo, NPlayersInfo);

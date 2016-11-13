@@ -1,6 +1,4 @@
 updatePosition(Player, Position, Laps, Score, NPosition, NLaps, Board, NBoard, Counter, TrueCount):-
-	write('TC: '), write(TrueCount), nl,
-	write('Counter: '), write(Counter), nl,
 	NTrueCount is TrueCount + 1,
 	getPositionCoords(Position, OldRow, OldCol, OldObject),
 	(
@@ -16,7 +14,8 @@ updatePosition(Player, Position, Laps, Score, NPosition, NLaps, Board, NBoard, C
 								(
 								XPosition > 39 -> NPosition is NPosition - 40,
 												NLaps is Laps + 1;
-								NewPosition is XPosition
+								NewPosition is XPosition,
+								NLaps is Laps
 								),
 								getPositionCoords(NewPosition, NewRow, NewCol, NewObject),
 								placeObjectOnBoard(Board, XBoard, PlayerObject, NewCol, NewRow),
@@ -26,7 +25,8 @@ updatePosition(Player, Position, Laps, Score, NPosition, NLaps, Board, NBoard, C
 								(
 								XPosition > 39 -> YPosition is XPosition - 40,
 												YLaps is Laps + 1;
-								YPosition is XPosition
+								YPosition is XPosition,
+								YLaps is Laps
 								),
 								getPositionCoords(YPosition, NewRow, NewCol, Obj),
 								getObjectOnBoard(Board, Object, NewCol, NewRow),
@@ -54,7 +54,7 @@ updatePosition(Player, Position, Laps, Score, NPosition, NLaps, Board, NBoard, C
 												updatePosition(Player, Position, YLaps, Score, NPosition, NLaps, Board, NBoard, NCounter, NTrueCount);
 								updatePosition(Player, Position, YLaps, Score, NPosition, NLaps, Board, NBoard, Counter, NTrueCount)
 							);
-					write('Error. FDS')
+					write('Error.')
 					);
 	Score = 0 -> write('Score is 0'), nl
 	).
