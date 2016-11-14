@@ -37,8 +37,11 @@ chooseOption:-
 	).
 
 treeStartMenu(Players, Board, NBoard):-
+	(
+	Players = 1 -> treePlacement(1, Board, XBoard), treePlacement(1, XBoard, YBoard);
 	treePlacement(1, Board, XBoard),
-	treePlacement(2, XBoard, YBoard),
+	treePlacement(2, XBoard, YBoard)
+	),
 	(
 	Players < 3 -> treePlacement(1, YBoard, NBoard);
 					treePlacement(3, YBoard, NBoard)
@@ -46,9 +49,20 @@ treeStartMenu(Players, Board, NBoard):-
 	
 treePlacement(Player, Board, NBoard):-
 	write('Player '), write(Player), write(' input coords to place tree [Col:Row] and press [ENTER]'), nl,
-	inputCoords(Row, Col),
-	placeObjectOnBoard(Board, NBoard, 'X', Row, Col),
-	printBoard(NBoard), nl.
+	inputCoords(Row, Col),	
+	(
+	Row > 9 -> write('Error - Row and Col must be between 0 - 10!'), nl, treePlacement(Player, Board, Nboard);
+	Row < 1 -> write('Error - Row and Col must be between 0 - 10!'), nl, treePlacement(Player, Board, Nboard);
+	Col > 9 -> write('Error - Row and Col must be between 0 - 10!'), nl, treePlacement(Player, Board, Nboard);
+	Col < 1 -> write('Error - Row and Col must be between 0 - 10!'), nl, treePlacement(Player, Board, Nboard); 
+	placeObjectOnBoard(Board, NBoard, 'T', Row, Col), printBoard(NBoard), nl
+	).
+	
+	%getObjectOnBoard(Board, Object, Row, Col),
+	%(
+	%Object = '0', 	placeObjectOnBoard(Board, NBoard, 'T', Row, Col), printBoard(NBoard), nl;
+	%write('Error - That position already has an object!'), nl
+	%).
 	
 		
 actionMenu(Players, Turn, Board, NBoard, PlayersInfo, NPlayersInfo):-
@@ -106,12 +120,12 @@ flowerPlacementMenu(Players, Turn, Board, NBoard, PlayersInfo, NPlayersInfo):-
 	getPlayerInfo(PlayersInfo, Turn, Purple, Red, Blue, Yellow, White, Green, Action, Position, Laps, 0),
 	write('FLOWER PLACEMENT'), nl,
 	write('Which type of flower do you wish to place?'), nl,
-	write('1. $ ('), write(Purple), write(' remaining)'), nl,
-	write('2. & ('), write(Red), write(' remaining)'), nl,
-	write('3. # ('), write(Blue), write(' remaining)'), nl,
-	write('4. * ('), write(Yellow), write(' remaining)'), nl,
-	write('5. + ('), write(White), write(' remaining)'), nl,
-	write('6. @ ('), write(Green), write(' remaining)'), nl,
+	write('1. Purple: "$" ('), write(Purple), write(' remaining)'), nl,
+	write('2. Red: "&" ('), write(Red), write(' remaining)'), nl,
+	write('3. Blue: "#" ('), write(Blue), write(' remaining)'), nl,
+	write('4. Yellow: "*" ('), write(Yellow), write(' remaining)'), nl,
+	write('5. White: "+" ('), write(White), write(' remaining)'), nl,
+	write('6. Green: "@" ('), write(Green), write(' remaining)'), nl,
 	getChar(Input), discardInputChar,
 	(
 	Input = '1' -> (
@@ -193,7 +207,8 @@ turnMenu(Players, Turn, Board, PlayersInfo, NBoard, NPlayersInfo):-
 	getPlayerInfo(PlayersInfo, Turn, Purple, Red, Blue, Yellow, White, Green, Action, Position, Laps, 0),
 	write('Player '), write(Turn), write(' turn. You have completed '), write(Laps), write(' laps. Please select an option.'), nl,
 	write('1. PLACE FLOWER'), nl,
-	write('2. USE AN ACTION'), nl, nl,
+	write('2. USE AN ACTION'), nl, 
+	write('3. VALID_MOVES'), nl,nl,
 	getChar(Input), discardInputChar,
 	(
 	Input = '1' -> flowerPlacementMenu(Players, Turn, Board, NBoard, PlayersInfo, NPlayersInfo);
@@ -201,7 +216,7 @@ turnMenu(Players, Turn, Board, PlayersInfo, NBoard, NPlayersInfo):-
 					Players > 2 -> (
 									Action = 0 -> actionMenu(Players, Turn, Board, NBoard, PlayersInfo, NPlayersInfo);
 									write('You already used an action.'), nl,
-									turnMenu(Players, Turn, Board, PlayersInfo, NBoard)
+									turnMenu(Players, Turn, Board, PlayersInfo, NBoard, NPlayersInfo)
 									);
 					Players = 2 -> (
 									Action < 2 -> actionMenu(Players, Turn, Board, NBoard, PlayersInfo, NPlayersInfo);
@@ -210,6 +225,7 @@ turnMenu(Players, Turn, Board, PlayersInfo, NBoard, NPlayersInfo):-
 									);
 					write('Error.'), nl
 					);
+	Input = '3' -> validMoves(Board, Player, ListOfMoves);
 	write('Invalid input..'), nl
 	).
 		
@@ -244,3 +260,8 @@ getInt(Input):-
 
 discardInputChar:-
 	get_code(_).
+	
+validMoves(Board, Player, ListOfMoves):-
+	write('Place a flower'), nl,
+	write('Use an action'), nl,nl,
+	turnMenu(Players, Turn, Board, PlayersInfo, NBoard, NPlayersInfo).

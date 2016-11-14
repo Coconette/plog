@@ -12,6 +12,12 @@ initGame(Players, Board, PlayersInfo):-
 	generatePlayersInfo(Players, PlayersInfo), !.
 	
 generatePlayersInfo(Players, PlayersInfo):-
+	Players = 1 -> PlayersInfo =[
+							[Pur1, Red1, Blu1, Yel1, Whi1, Gre1, 0, 0, 0],
+							[Pur2, Red2, Blu2, Yel2, Whi2, Gre2, 0, 0, 0]],
+					randomizePlayerFlowers(27, 0, Pur1, Red1, Blu1, Yel1, Whi1, Gre1, 0, 0, 0, 0, 0, 0),
+					randomizePlayerFlowers(27, 0, Pur2, Red2, Blu2, Yel2, Whi2, Gre2, 0, 0, 0, 0, 0, 0),
+					write('Flowers Successfully Generated'),nl, nl;
 	Players = 2 -> PlayersInfo = [
 							[Pur1, Red1, Blu1, Yel1, Whi1, Gre1, 0, 0, 0],
 							[Pur2, Red2, Blu2, Yel2, Whi2, Gre2, 0, 0, 0]],
