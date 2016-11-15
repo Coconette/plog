@@ -109,9 +109,9 @@ actionMenu(Players, Turn, Board, NBoard, PlayersInfo, NPlayersInfo):-
 	Input = '5' -> (
 					ActionFive = '-' -> write('This action has already been used.'), nl,
 									 actionMenu(Players, Turn, Board, NBoard, PlayersInfo, NPlayersInfo);
-					updatePosition(Turn, Position, Laps, 5, NPosition, NLaps, Board, NBoard, 0, 0),
+					updatePosition(Turn, Position, Laps, 5, NPosition, NLaps, Board, XBoard, 0, 0),
 					updatePlayersInfo(Players, PlayersInfo, Turn, Purple, Red, Blue, Yellow, White, Green, 1, NPosition, NLaps, NPlayersInfo),
-					write('Moved 5 spaces'), nl
+					placeObjectOnBoard(XBoard, NBoard, '-', 4, 12)
 					);
 	write('Invalid input.')
 	).

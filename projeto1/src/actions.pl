@@ -5,28 +5,28 @@ firstAction(Players, Turn, Board, NBoard, PlayersInfo, NPlayersInfo):-
 	inputCoords(TreeRow, TreeCol),
 	getObjectOnBoard(Board, Tree, TreeRow, TreeCol),
 	(
-	Tree = 'X' -> write('Input coords of flower'), nl,
+	Tree = 'T' -> write('Input coords of flower'), nl,
 				inputCoords(FlowerRow, FlowerCol),
 				getObjectOnBoard(Board, Flower, FlowerRow, FlowerCol),
 				updatePlayersInfo(Players, PlayersInfo, Turn, Purple, Red, Blue, Yellow, White, Green, 1, Position, Laps, NPlayersInfo),
 				(
 				Flower = '$' -> placeObjectOnBoard(Board, XBoard, '$', TreeRow, TreeCol),
-								placeObjectOnBoard(XBoard, YBoard, 'X', FlowerRow, FlowerCol),
+								placeObjectOnBoard(XBoard, YBoard, 'T', FlowerRow, FlowerCol),
 								placeObjectOnBoard(YBoard, NBoard, '-', 0, 12);
 				Flower = '&' -> placeObjectOnBoard(Board, XBoard, '&', TreeRow, TreeCol),
-								placeObjectOnBoard(XBoard, YBoard, 'X', FlowerRow, FlowerCol),
+								placeObjectOnBoard(XBoard, YBoard, 'T', FlowerRow, FlowerCol),
 								placeObjectOnBoard(YBoard, NBoard, '-', 0, 12);
 				Flower = '#' -> placeObjectOnBoard(Board, XBoard, '#', TreeRow, TreeCol),
-								placeObjectOnBoard(XBoard, YBoard, 'X', FlowerRow, FlowerCol),
+								placeObjectOnBoard(XBoard, YBoard, 'T', FlowerRow, FlowerCol),
 								placeObjectOnBoard(YBoard, NBoard, '-', 0, 12);
 				Flower = '*' -> placeObjectOnBoard(Board, XBoard, '*', TreeRow, TreeCol),
-								placeObjectOnBoard(XBoard, YBoard, 'X', FlowerRow, FlowerCol),
+								placeObjectOnBoard(XBoard, YBoard, 'T', FlowerRow, FlowerCol),
 								placeObjectOnBoard(YBoard, NBoard, '-', 0, 12);
 				Flower = '+' -> placeObjectOnBoard(Board, XBoard, '+', TreeRow, TreeCol),
-								placeObjectOnBoard(XBoard, YBoard, 'X', FlowerRow, FlowerCol),
+								placeObjectOnBoard(XBoard, YBoard, 'T', FlowerRow, FlowerCol),
 								placeObjectOnBoard(YBoard, NBoard, '-', 0, 12);
 				Flower = '@' -> placeObjectOnBoard(Board, XBoard, '@', TreeRow, TreeCol),
-								placeObjectOnBoard(XBoard, YBoard, 'X', FlowerRow, FlowerCol),
+								placeObjectOnBoard(XBoard, YBoard, 'T', FlowerRow, FlowerCol),
 								placeObjectOnBoard(YBoard, NBoard, '-', 0, 12);
 				write('Error. There are no flowers on the coords indicated.')
 				);
@@ -127,12 +127,12 @@ fourthAction(Players, Turn, Board, NBoard, PlayersInfo, NPlayersInfo):-
 	inputCoords(TreeRow, TreeCol),
 	getObjectOnBoard(Board, Tree, TreeRow, TreeCol),
 	(
-	Tree = 'X' -> write('Input coords to move'), nl,
+	Tree = 'T' -> write('Input coords to move'), nl,
 				inputCoords(EmptyRow, EmptyCol),
 				getObjectOnBoard(Board, Empty, FlowerRow, FlowerCol),
 				(
 				Empty = '0' -> placeObjectOnBoard(Board, XBoard, ' ', TreeRow, TreeCol),
-								placeObjectOnBoard(XBoard, YBoard, 'X', EmptyRow, EmptyCol),
+								placeObjectOnBoard(XBoard, YBoard, 'T', EmptyRow, EmptyCol),
 								placeObjectOnBoard(YBoard, NBoard, '-', 3, 12),
 								updatePlayersInfo(Players, PlayersInfo, Turn, Purple, Red, Blue, Yellow, White, Green, 1, Position, Laps, NPlayersInfo);
 				write('Error. That is not an empty space.'), nl

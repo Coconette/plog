@@ -118,7 +118,7 @@ playGame(Players, Turn, Board, PlayersInfo):-
 	turnMenu(Players, Turn, Board, PlayersInfo, NBoard, NPlayersInfo),
 	printBoard(NBoard),
 	(
-	Turn = Players -> write('test'), playGame(Players, 1, NBoard, NPlayersInfo);
+	Turn = Players -> playGame(Players, 1, NBoard, NPlayersInfo);
 	increment(Turn, NTurn),
 	playGame(Players, NTurn, NBoard, NPlayersInfo)
 	).

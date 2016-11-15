@@ -30,7 +30,6 @@ updatePosition(Player, Position, Laps, Score, NPosition, NLaps, Board, NBoard, C
 								),
 								getPositionCoords(YPosition, NewRow, NewCol, Obj),
 								getObjectOnBoard(Board, Object, NewCol, NewRow),
-								write(Object), nl,
 								(
 								Object = '1' -> NCounter is Counter + 1,
 												updatePosition(Player, Position, YLaps, Score, NPosition, NLaps, Board, NBoard, NCounter, NTrueCount);
