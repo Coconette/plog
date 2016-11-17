@@ -28,9 +28,9 @@ generatePlayersInfo(Players, PlayersInfo):-
 							[Pur1, Red1, Blu1, Yel1, Whi1, Gre1, 0, 0, 0],
 							[Pur2, Red2, Blu2, Yel2, Whi2, Gre2, 0, 0, 0],
 							[Pur3, Red3, Blu3, Yel3, Whi3, Gre3, 0, 0, 0]],
-					randomizePlayerFlowers(18, 0, Pur1, Red1, Blu1, Yel1, Whi1, Gre1, 0, 0, 0, 0, 0, 0),
-					randomizePlayerFlowers(18, 0, Pur2, Red2, Blu2, Yel2, Whi2, Gre2, 0, 0, 0, 0, 0, 0),
-					randomizePlayerFlowers(18, 0, Pur3, Red3, Blu3, Yel3, Whi3, Gre3, 0, 0, 0, 0, 0, 0),
+					randomizePlayerFlowers(2, 0, Pur1, Red1, Blu1, Yel1, Whi1, Gre1, 0, 0, 0, 0, 0, 0),
+					randomizePlayerFlowers(2, 0, Pur2, Red2, Blu2, Yel2, Whi2, Gre2, 0, 0, 0, 0, 0, 0),
+					randomizePlayerFlowers(2, 0, Pur3, Red3, Blu3, Yel3, Whi3, Gre3, 0, 0, 0, 0, 0, 0),
 					write('Flowers Successfully Generated'), nl, nl;
 	Players = 4 -> PlayersInfo = [
 							[Pur1, Red1, Blu1, Yel1, Whi1, Gre1, 0, 0, 0],
@@ -149,116 +149,94 @@ checkWinner(Players, PlayersInfo):-
 	(
 	Players = 2 -> getPlayerInfo(PlayersInfo, 1, Pur1, Red1, Blu1, Yel1, Whi1, Gre1, Act1, Pos1, Lap1, 0),
 				getPlayerInfo(PlayersInfo, 2, Pur2, Red2, Blu2, Yel2, Whi2, Gre2, Act2, Pos2, Lap2, 0),
+				Res1 is (Lap1 * 1000 + Pos1),
+				Res2 is (Lap2 * 1000 + Pos2),
 				(
-				Lap1 > Lap2 -> write('PLAYER 1 IS THE WINNER!!'), nl;
-				Lap1 < Lap2 -> write('PLAYER 2 IS THE WINNER!!'), nl;
-				Pos1 > Pos2 -> write('PLAYER 1 IS THE WINNER!!'), nl;
+				Res1 > Res2 -> write('PLAYER 1 IS THE WINNER!!'), nl;
 				write('PLAYER 2 IS THE WINNER!!'), nl
 				);
 	Players = 3 -> getPlayerInfo(PlayersInfo, 1, Pur1, Red1, Blu1, Yel1, Whi1, Gre1, Act1, Pos1, Lap1, 0),
 				getPlayerInfo(PlayersInfo, 2, Pur2, Red2, Blu2, Yel2, Whi2, Gre2, Act2, Pos2, Lap2, 0),
 				getPlayerInfo(PlayersInfo, 3, Pur3, Red3, Blu3, Yel3, Whi3, Gre3, Act3, Pos3, Lap3, 0),
+				Res1 is (Lap1 * 1000 + Pos1),
+				Res2 is (Lap2 * 1000 + Pos2),
+				Res3 is (Lap3 * 1000 + Pos3),
 				(
-				Lap1 > Lap2 -> (
-								Lap1 > Lap3 -> write('PLAYER 1 IS THE WINNER!!'), nl;
-								Lap3 > Lap1 -> write('PLAYER 3 IS THE WINNER!!'), nl;
-								Pos1 > Pos3 -> write('PLAYER 1 IS THE WINNER!!'), nl;
+				Res1 > Res2 -> (
+								Res1 > Res3 -> write('PLAYER 1 IS THE WINNER!!'), nl;
 								write('PLAYER 3 IS THE WINNER!!'), nl
 								);
-				Lap2 > Lap1 -> (
-								Lap2 > Lap3 -> write('PLAYER 2 IS THE WINNER!!'), nl;
-								Lap3 > Lap2 -> write('PLAYER 3 IS THE WINNER!!'), nl;
-								Pos2 > Pos3 -> write('PLAYER 2 IS THE WINNER!!'), nl;
-								write('PLAYER 3 IS THE WINNER!!'), nl
-								)
+				Res2 > Res3 -> write('PLAYER 2 IS THE WINNER!!'), nl;
+				write('PLAYER 3 IS THE WINNER!!'), nl
 				);
 				
 	Players = 4 -> getPlayerInfo(PlayersInfo, 1, Pur1, Red1, Blu1, Yel1, Whi1, Gre1, Act1, Pos1, Lap1, 0),
 				getPlayerInfo(PlayersInfo, 2, Pur2, Red2, Blu2, Yel2, Whi2, Gre2, Act2, Pos2, Lap2, 0),
 				getPlayerInfo(PlayersInfo, 3, Pur3, Red3, Blu3, Yel3, Whi3, Gre3, Act3, Pos3, Lap3, 0),
 				getPlayerInfo(PlayersInfo, 4, Pur4, Red4, Blu4, Yel4, Whi4, Gre4, Act4, Pos4, Lap4, 0),
+				Res1 is (Lap1 * 1000 + Pos1),
+				Res2 is (Lap2 * 1000 + Pos2),
+				Res3 is (Lap3 * 1000 + Pos3),
+				Res4 is (Lap4 * 1000 + Pos4),
 				(
-				Lap1 > Lap2 -> (
-								Lap1 > Lap3 -> (
-									Lap1 > Lap4 -> write('PLAYER 1 IS THE WINNER!!'), nl;
-									Lap4 > Lap1 -> write('PLAYER 4 IS THE WINNER!!'), nl;
-									Pos1 > Pos4 -> write('PLAYER 1 IS THE WINNER!!'), nl;
-									write('PLAYER 4 IS THE WINNER!!'), nl
-								));
-				Lap2 > Lap1 -> (
-								Lap2 > Lap3 -> (
-									Lap2 > Lap4 -> write('PLAYER 2 IS THE WINNER!!'), nl;
-									Lap4 > Lap2 -> write('PLAYER 4 IS THE WINNER!!'), nl;
-									Pos2 > Pos4 -> write('PLAYER 2 IS THE WINNER!!'), nl;
-									write('PLAYER 4 IS THE WINNER!!'), nl
+				Res1 > Res2 -> (
+								Res1 > Res3 -> (
+												Res1 > Res4 -> write('PLAYER 1 IS THE WINNER!!'), nl;
+												write('PLAYER 4 IS THE WINNER!!'), nl
+												);
+								(
+								Res3 > Res4 -> write('PLAYER 3 IS THE WINNER!!'), nl;
+								write('PLAYER 4 IS THE WINNER!!'), nl
+								)
 								);
-								Lap3 > Lap4 -> write('PLAYER 3 IS THE WINNER!!'), nl;
-								Lap4 > Lap3 -> write('PLAYER 4 IS THE WINNER!!'), nl;
-								Pos3 > Pos4 -> write('PLAYER 3 IS THE WINNER!!'), nl;
-									write('PLAYER 4 IS THE WINNER!!'), nl
-								));
+				Res2 > Res3 -> (
+								Res2 > Res4 -> write('PLAYER 2 IS THE WINNER!!'), nl;
+								write('PLAYER 4 IS THE WINNER!!'), nl
+								);
+				Res3 > Res4 -> write('PLAYER 3 IS THE WINNER!!'), nl;
+				write('PLAYER 4 IS THE WINNER!!'), nl
+				);
 	
-		Players = 5 -> getPlayerInfo(PlayersInfo, 1, Pur1, Red1, Blu1, Yel1, Whi1, Gre1, Act1, Pos1, Lap1, 0),
+	Players = 5 -> getPlayerInfo(PlayersInfo, 1, Pur1, Red1, Blu1, Yel1, Whi1, Gre1, Act1, Pos1, Lap1, 0),
 				getPlayerInfo(PlayersInfo, 2, Pur2, Red2, Blu2, Yel2, Whi2, Gre2, Act2, Pos2, Lap2, 0),
 				getPlayerInfo(PlayersInfo, 3, Pur3, Red3, Blu3, Yel3, Whi3, Gre3, Act3, Pos3, Lap3, 0),
 				getPlayerInfo(PlayersInfo, 4, Pur4, Red4, Blu4, Yel4, Whi4, Gre4, Act4, Pos4, Lap4, 0),
 				getPlayerInfo(PlayersInfo, 5, Pur5, Red5, Blu5, Yel5, Whi5, Gre5, Act5, Pos5, Lap5, 0),
+				Res1 is (Lap1 * 1000 + Pos1),
+				Res2 is (Lap2 * 1000 + Pos2),
+				Res3 is (Lap3 * 1000 + Pos3),
+				Res4 is (Lap4 * 1000 + Pos4),
+				Res5 is (Lap5 * 1000 + Pos5),
 				(
-				Lap1 > Lap2 -> (
-								Lap1 > Lap3 -> (
-												Lap1 > Lap4 -> (
-													Lap1 > Lap5 -> write('PLAYER 1 IS THE WINNER!!'), nl;
-													Lap5 > Lap1 -> write('PLAYER 5 IS THE WINNER!!'), nl;
-													Pos1 > Pos5 -> write('PLAYER 1 IS THE WINNER!!'), nl;
-													write('PLAYER 5 IS THE WINNER!!'), nl
-									);
-													Lap4 > Lap5 -> write('PLAYER 4 IS THE WINNER!!'), nl;
-													Lap5 > Lap4 -> write('PLAYER 5 IS THE WINNER!!'), nl;
-													Pos4 > Pos5 -> write('PLAYER 4 IS THE WINNER!!'), nl;
-													write('PLAYER 5 IS THE WINNER!!'),nl
-								);
-								
-								Lap3 > Lap4 -> (
-									Lap3 > Lap5 -> write('PLAYER 3 IS THE WINNER!!'), nl;
-									Lap5 > Lap3 -> write('PLAYER 5 IS THE WINNER!!'), nl;
-									Pos3 > Pos5 -> write('PLAYER 3 IS THE WINNER!!'), nl;
-									write('PLAYER 5 IS THE WINNER!!'), nl
-								);
-									Lap4 > Lap5 -> write('PLAYER 4 IS THE WINNER!!'), nl;
-									Lap5 > Lap4 -> write('PLAYER 5 IS THE WINNER!!'), nl;
-									Pos4 > Pos5 -> write('PLAYER 4 IS THE WINNER!!'), nl;
-									write('PLAYER 5 IS THE WINNER!!'),nl
-						);
-								
-												
-												
-								
-				Lap2 > Lap1 -> (
-								Lap2 > Lap3 -> (
-												Lap2 > Lap4 -> (
-													Lap2 > Lap5 -> write('PLAYER 2 IS THE WINNER!!'), nl;
-													Lap5 > Lap2 -> write('PLAYER 5 IS THE WINNER!!'), nl;
-													Pos2 > Pos5 -> write('PLAYER 2 IS THE WINNER!!'), nl;
-													write('PLAYER 5 IS THE WINNER!!'), nl
+				Res1 > Res2 -> (
+								Res1 > Res3 -> (
+												Res1 > Res4 -> (
+																Res1 > Res5 -> write('PLAYER 1 IS THE WINNER!!'), nl;
+																write('PLAYER 5 IS THE WINNER!!'), nl
+																);
+												Res4 > Res5 -> write('PLAYER 4 IS THE WINNER!!'), nl;
+												write('PLAYER 5 IS THE WINNER!!'), nl
 												);
-												
-													Lap4 > Lap5 -> write('PLAYER 4 IS THE WINNER!!'), nl;
-													Lap5 > Lap4 -> write('PLAYER 5 IS THE WINNER!!'), nl;
-													Pos4 > Pos5 -> write('PLAYER 4 IS THE WINNER!!'), nl;
-													write('PLAYER 5 IS THE WINNER!!'),nl
-										);
-								
-								Lap3 > Lap2 -> (
-												Lap3 > Lap4 -> (
-													Lap3 > Lap5 -> write('PLAYER 3 IS THE WINNER!!'), nl;
-													Lap5 > Lap3 -> write('PLAYER 5 IS THE WINNER!!'), nl;
-													Pos3 > Pos5 -> write('PLAYER 3 IS THE WINNER!!'), nl;
-													write('PLAYER 5 IS THE WINNER!!'), nl
+								Res3 > Res4 -> (
+												Res3 > Res5 -> write('PLAYER 3 IS THE WINNER!!'), nl;
+												write('PLAYER 5 IS THE WINNER!!'), nl
 												);
-													Lap4 > Lap5 -> write('PLAYER 4 IS THE WINNER!!'), nl;
-													Lap5 > Lap4 -> write('PLAYER 5 IS THE WINNER!!'), nl;
-													Pos4 > Pos5 -> write('PLAYER 4 IS THE WINNER!!'), nl;
-													write('PLAYER 5 IS THE WINNER!!'),nl
-										))
-			)
+								Res4 > Res5 -> write('PLAYER 4 IS THE WINNER!!'), nl;
+								write('PLAYER 5 IS THE WINNER!!'), nl
+								);
+				Res2 > Res3 -> (
+								Res2 > Res4 -> (
+												Res2 > Res5 -> write('PLAYER 2 IS THE WINNER!!'), nl;
+												write('PLAYER 5 IS THE WINNER!!'), nl
+												);
+								Res4 > Res5 -> write('PLAYER 4 IS THE WINNER!!'), nl;
+								write('PLAYER 5 IS THE WINNER!!'), nl
+								);
+				Res3 > Res4 -> (
+								Res3 > Res5 -> write('PLAYER 3 IS THE WINNER!!'), nl;
+								write('PLAYER 5 IS THE WINNER!!'), nl
+								);
+				Res4 > Res5 -> write('PLAYER 4 IS THE WINNER!!'), nl;
+				write('PLAYER 5 IS THE WINNER!!'), nl
+				)
 	).

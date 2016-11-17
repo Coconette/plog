@@ -143,7 +143,7 @@ flowerPlacementMenu(Players, Turn, Board, NBoard, PlayersInfo, NPlayersInfo):-
 								placeObjectOnBoard(Board, XBoard, '&', Row, Col),
 								getScore(NBoard, '&', Row, Col, Score),
 								write('You scored '), write(Score), write(' points this turn.'), nl,
-								updatePosition(Turn, Position, Laps, Score, NPosition, NLaps, XBoard, NBoard, 0, 1),
+								updatePosition(Turn, Position, Laps, Score, NPosition, NLaps, XBoard, NBoard, 0, 0),
 								NRed is Red - 1,
 								updatePlayersInfo(Players, PlayersInfo, Turn, Purple, NRed, Blue, Yellow, White, Green, Action, NPosition, NLaps, NPlayersInfo);
 					write('You have no & flowers left. Please try again.'),
@@ -155,7 +155,7 @@ flowerPlacementMenu(Players, Turn, Board, NBoard, PlayersInfo, NPlayersInfo):-
 								placeObjectOnBoard(Board, XBoard, '#', Row, Col),
 								getScore(NBoard, '#', Row, Col, Score),
 								write('You scored '), write(Score), write(' points this turn.'), nl,
-								updatePosition(Turn, Position, Laps, Score, NPosition, NLaps, XBoard, NBoard, 0, 1),
+								updatePosition(Turn, Position, Laps, Score, NPosition, NLaps, XBoard, NBoard, 0, 0),
 								NBlue is Blue - 1,
 								updatePlayersInfo(Players, PlayersInfo, Turn, Purple, Red, NBlue, Yellow, White, Green, Action, NPosition, NLaps, NPlayersInfo);
 					write('You have no # flowers left. Please try again.'),
@@ -167,7 +167,7 @@ flowerPlacementMenu(Players, Turn, Board, NBoard, PlayersInfo, NPlayersInfo):-
 								placeObjectOnBoard(Board, XBoard, '*', Row, Col),
 								getScore(NBoard, '*', Row, Col, Score),
 								write('You scored '), write(Score), write(' points this turn.'), nl,
-								updatePosition(Turn, Position, Laps, Score, NPosition, NLaps, XBoard, NBoard, 0, 1),
+								updatePosition(Turn, Position, Laps, Score, NPosition, NLaps, XBoard, NBoard, 0, 0),
 								NYellow is Yellow - 1,
 								updatePlayersInfo(Players, PlayersInfo, Turn, Purple, Red, Blue, NYellow, White, Green, Action, NPosition, NLaps, NPlayersInfo);
 					write('You have no * flowers left. Please try again.'),
@@ -179,7 +179,7 @@ flowerPlacementMenu(Players, Turn, Board, NBoard, PlayersInfo, NPlayersInfo):-
 								placeObjectOnBoard(Board, XBoard, '+', Row, Col),
 								getScore(NBoard, '+', Row, Col, Score),
 								write('You scored '), write(Score), write(' points this turn.'), nl,
-								updatePosition(Turn, Position, Laps, Score, NPosition, NLaps, XBoard, NBoard, 0, 1),
+								updatePosition(Turn, Position, Laps, Score, NPosition, NLaps, XBoard, NBoard, 0, 0),
 								NWhite is White - 1,
 								updatePlayersInfo(Players, PlayersInfo, Turn, Purple, Red, Blue, Yellow, NWhite, Green, Action, NPosition, NLaps, NPlayersInfo);
 					write('You have no + flowers left. Please try again.'),
@@ -191,7 +191,7 @@ flowerPlacementMenu(Players, Turn, Board, NBoard, PlayersInfo, NPlayersInfo):-
 								placeObjectOnBoard(Board, XBoard, '@', Row, Col),
 								getScore(NBoard, '@', Row, Col, Score),
 								write('You scored '), write(Score), write(' points this turn.'), nl,
-								updatePosition(Turn, Position, Laps, Score, NPosition, NLaps, XBoard, NBoard, 0, 1),
+								updatePosition(Turn, Position, Laps, Score, NPosition, NLaps, XBoard, NBoard, 0, 0),
 								NGreen is Green - 1,
 								updatePlayersInfo(Players, PlayersInfo, Turn, Purple, Red, Blue, Yellow, White, NGreen, Action, NPosition, NLaps, NPlayersInfo);
 					write('You have no @ flowers left. Please try again.'),
