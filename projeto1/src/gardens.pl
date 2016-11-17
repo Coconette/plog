@@ -28,9 +28,9 @@ generatePlayersInfo(Players, PlayersInfo):-
 							[Pur1, Red1, Blu1, Yel1, Whi1, Gre1, 0, 0, 0],
 							[Pur2, Red2, Blu2, Yel2, Whi2, Gre2, 0, 0, 0],
 							[Pur3, Red3, Blu3, Yel3, Whi3, Gre3, 0, 0, 0]],
-					randomizePlayerFlowers(18, 0, Pur1, Red1, Blu1, Yel1, Whi1, Gre1, 0, 0, 0, 0, 0, 0),
-					randomizePlayerFlowers(18, 0, Pur2, Red2, Blu2, Yel2, Whi2, Gre2, 0, 0, 0, 0, 0, 0),
-					randomizePlayerFlowers(18, 0, Pur3, Red3, Blu3, Yel3, Whi3, Gre3, 0, 0, 0, 0, 0, 0),
+					randomizePlayerFlowers(3, 0, Pur1, Red1, Blu1, Yel1, Whi1, Gre1, 0, 0, 0, 0, 0, 0),
+					randomizePlayerFlowers(3, 0, Pur2, Red2, Blu2, Yel2, Whi2, Gre2, 0, 0, 0, 0, 0, 0),
+					randomizePlayerFlowers(3, 0, Pur3, Red3, Blu3, Yel3, Whi3, Gre3, 0, 0, 0, 0, 0, 0),
 					write('Flowers Successfully Generated'), nl, nl;
 	Players = 4 -> PlayersInfo = [
 							[Pur1, Red1, Blu1, Yel1, Whi1, Gre1, 0, 0, 0],
@@ -117,15 +117,69 @@ getInfo([Head | Tail], Purple, Red, Blue, Yellow, White, Green, Action, Position
 playGame(Players, Turn, Board, PlayersInfo):-
 	turnMenu(Players, Turn, Board, PlayersInfo, NBoard, NPlayersInfo),
 	printBoard(NBoard),
+	checkEndGame(Turn, NPlayersInfo, End),
 	(
-	Turn = Players -> playGame(Players, 1, NBoard, NPlayersInfo);
+	End = 0 -> 
+	(Turn = Players -> playGame(Players, 1, NBoard, NPlayersInfo);
 	increment(Turn, NTurn),
 	playGame(Players, NTurn, NBoard, NPlayersInfo)
+	);
+	checkWinner(Players, NPlayersInfo)
 	).
 	
-getScore(Board, Object, Row, Col, Dir, Counter, Score):-
+getScore(Board, Object, Row, Col, Score):-
 	Score is 1.
 	
 increment(Num1, Num2):-
 	Num2 is Num1 + 1.
 	
+checkEndGame(Turn, PlayersInfo, End):-
+	getPlayerInfo(PlayersInfo, Turn, Purple, Red, Blue, Yellow, White, Green, Action, Position, Laps, 0),
+	write('VERIFICACAO'), nl,
+	write('player: '), write(Turn),
+	write('1. Purple: "$" ('), write(Purple), write(' remaining)'), nl,
+	write('2. Red: "&" ('), write(Red), write(' remaining)'), nl,
+	write('3. Blue: "#" ('), write(Blue), write(' remaining)'), nl,
+	write('4. Yellow: "*" ('), write(Yellow), write(' remaining)'), nl,
+	write('5. White: "+" ('), write(White), write(' remaining)'), nl,
+	write('6. Green: "@" ('), write(Green), write(' remaining)'), nl,
+	(
+	Purple > 0 -> End is 0;
+	Red > 0 -> End is 0;
+	Blue > 0 -> End is 0;
+	Yellow > 0 -> End is 0;
+	White > 0 -> End is 0;
+	Green > 0 -> End is 0;
+	End is 1
+	).
+	
+checkWinner(Players, PlayersInfo):-
+	(
+	Players = 2 -> getPlayerInfo(PlayersInfo, 1, Pur1, Red1, Blu1, Yel1, Whi1, Gre1, Act1, Pos1, Lap1, 0),
+				getPlayerInfo(PlayersInfo, 2, Pur2, Red2, Blu2, Yel2, Whi2, Gre2, Act2, Pos2, Lap2, 0),
+				(
+				Lap1 > Lap2 -> write('PLAYER 1 IS THE WINNER!!'), nl;
+				Lap1 < Lap2 -> write('PLAYER 2 IS THE WINNER!!'), nl;
+				Pos1 > Pos2 -> write('PLAYER 1 IS THE WINNER!!'), nl;
+				write('PLAYER 2 IS THE WINNER!!'), nl
+				);
+	Players = 3 -> getPlayerInfo(PlayersInfo, 1, Pur1, Red1, Blu1, Yel1, Whi1, Gre1, Act1, Pos1, Lap1, 0),
+				getPlayerInfo(PlayersInfo, 2, Pur2, Red2, Blu2, Yel2, Whi2, Gre2, Act2, Pos2, Lap2, 0),
+				getPlayerInfo(PlayersInfo, 2, Pur3, Red3, Blu3, Yel3, Whi3, Gre3, Act3, Pos3, Lap3, 0),
+				(
+				Lap1 > Lap2 -> (
+								Lap1 > Lap3 -> write('PLAYER 1 IS THE WINNER!!'), nl;
+								Lap3 > Lap1 -> write('PLAYER 3 IS THE WINNER!!'), nl;
+								Pos1 > Pos3 -> write('PLAYER 1 IS THE WINNER!!'), nl;
+								write('PLAYER 3 IS THE WINNER!!'), nl;
+								);
+				Lap2 > Lap1 -> (
+								Lap2 > Lap3 -> write('PLAYER 2 IS THE WINNER!!'), nl;
+								Lap3 > Lap2 -> write('PLAYER 3 IS THE WINNER!!'), nl;
+								Pos2 > Pos3 -> write('PLAYER 2 IS THE WINNER!!'), nl;
+								write('PLAYER 3 IS THE WINNER!!'), nl; 
+								)
+				Lap3 > Lap1 -> write('PLAYER 3 IS THE WINNER!!'), nl;
+				
+				)
+	)

@@ -51,19 +51,16 @@ treePlacement(Player, Board, NBoard):-
 	write('Player '), write(Player), write(' input coords to place tree [Col:Row] and press [ENTER]'), nl,
 	inputCoords(Row, Col),	
 	(
-	Row > 9 -> write('Error - Row and Col must be between 0 - 10!'), nl, treePlacement(Player, Board, Nboard);
-	Row < 1 -> write('Error - Row and Col must be between 0 - 10!'), nl, treePlacement(Player, Board, Nboard);
-	Col > 9 -> write('Error - Row and Col must be between 0 - 10!'), nl, treePlacement(Player, Board, Nboard);
-	Col < 1 -> write('Error - Row and Col must be between 0 - 10!'), nl, treePlacement(Player, Board, Nboard); 
-	placeObjectOnBoard(Board, NBoard, 'T', Row, Col), printBoard(NBoard), nl
-	).
-	
-	%getObjectOnBoard(Board, Object, Row, Col),
-	%(
-	%Object = '0', 	placeObjectOnBoard(Board, NBoard, 'T', Row, Col), printBoard(NBoard), nl;
-	%write('Error - That position already has an object!'), nl
-	%).
-	
+	Row > 9 -> write('Error - Row and Col must be between 0 - 10!'), nl, treePlacement(Player, Board, NBoard);
+	Row < 1 -> write('Error - Row and Col must be between 0 - 10!'), nl, treePlacement(Player, Board, NBoard);
+	Col > 9 -> write('Error - Row and Col must be between 0 - 10!'), nl, treePlacement(Player, Board, NBoard);
+	Col < 1 -> write('Error - Row and Col must be between 0 - 10!'), nl, treePlacement(Player, Board, NBoard);
+	getObjectOnBoard(Board, Object, Row, Col),
+	(
+	Object = ' ' ->	placeObjectOnBoard(Board, NBoard, 'T', Row, Col), printBoard(NBoard), nl;
+	write('Error - That position already has an object!'),
+	treePlacement(Player, Board, NBoard)
+	)).
 		
 actionMenu(Players, Turn, Board, NBoard, PlayersInfo, NPlayersInfo):-
 	getPlayerInfo(PlayersInfo, Turn, Purple, Red, Blue, Yellow, White, Green, Action, Position, Laps, 0),
@@ -132,7 +129,7 @@ flowerPlacementMenu(Players, Turn, Board, NBoard, PlayersInfo, NPlayersInfo):-
 					Purple > 0 -> write('Input coords to place $ flower'), nl,
 								inputCoords(Row, Col),
 								placeObjectOnBoard(Board, XBoard, '$', Row, Col),
-								getScore(NBoard, '$', Row, Col, 0, 0, Score),
+								getScore(NBoard, '$', Row, Col, Score),
 								write('You scored '), write(Score), write(' points this turn.'), nl,
 								updatePosition(Turn, Position, Laps, Score, NPosition, NLaps, XBoard, NBoard, 0, 0),
 								NPurple is Purple - 1,
@@ -144,7 +141,7 @@ flowerPlacementMenu(Players, Turn, Board, NBoard, PlayersInfo, NPlayersInfo):-
 					Red > 0 -> write('Input coords to place & flower'), nl,
 								inputCoords(Row, Col),
 								placeObjectOnBoard(Board, XBoard, '&', Row, Col),
-								getScore(NBoard, '&', Row, Col, 0, 0, Score),
+								getScore(NBoard, '&', Row, Col, Score),
 								write('You scored '), write(Score), write(' points this turn.'), nl,
 								updatePosition(Turn, Position, Laps, Score, NPosition, NLaps, XBoard, NBoard, 0, 1),
 								NRed is Red - 1,
@@ -156,7 +153,7 @@ flowerPlacementMenu(Players, Turn, Board, NBoard, PlayersInfo, NPlayersInfo):-
 					Blue > 0 -> write('Input coords to place # flower'), nl,
 								inputCoords(Row, Col),
 								placeObjectOnBoard(Board, XBoard, '#', Row, Col),
-								getScore(NBoard, '#', Row, Col, 0, 0, Score),
+								getScore(NBoard, '#', Row, Col, Score),
 								write('You scored '), write(Score), write(' points this turn.'), nl,
 								updatePosition(Turn, Position, Laps, Score, NPosition, NLaps, XBoard, NBoard, 0, 1),
 								NBlue is Blue - 1,
@@ -168,7 +165,7 @@ flowerPlacementMenu(Players, Turn, Board, NBoard, PlayersInfo, NPlayersInfo):-
 					Yellow > 0 -> write('Input coords to place * flower'), nl,
 								inputCoords(Row, Col),
 								placeObjectOnBoard(Board, XBoard, '*', Row, Col),
-								getScore(NBoard, '+', Row, Col, 0, 0, Score),
+								getScore(NBoard, '*', Row, Col, Score),
 								write('You scored '), write(Score), write(' points this turn.'), nl,
 								updatePosition(Turn, Position, Laps, Score, NPosition, NLaps, XBoard, NBoard, 0, 1),
 								NYellow is Yellow - 1,
@@ -180,7 +177,7 @@ flowerPlacementMenu(Players, Turn, Board, NBoard, PlayersInfo, NPlayersInfo):-
 					White > 0 -> write('Input coords to place + flower'), nl,
 								inputCoords(Row, Col),
 								placeObjectOnBoard(Board, XBoard, '+', Row, Col),
-								getScore(NBoard, '+', Row, Col, 0, 0, Score),
+								getScore(NBoard, '+', Row, Col, Score),
 								write('You scored '), write(Score), write(' points this turn.'), nl,
 								updatePosition(Turn, Position, Laps, Score, NPosition, NLaps, XBoard, NBoard, 0, 1),
 								NWhite is White - 1,
@@ -192,7 +189,7 @@ flowerPlacementMenu(Players, Turn, Board, NBoard, PlayersInfo, NPlayersInfo):-
 					Green > 0 -> write('Input coords to place @ flower'), nl,
 								inputCoords(Row, Col),
 								placeObjectOnBoard(Board, XBoard, '@', Row, Col),
-								getScore(NBoard, '@', Row, Col, 0, 0, Score),
+								getScore(NBoard, '@', Row, Col, Score),
 								write('You scored '), write(Score), write(' points this turn.'), nl,
 								updatePosition(Turn, Position, Laps, Score, NPosition, NLaps, XBoard, NBoard, 0, 1),
 								NGreen is Green - 1,
