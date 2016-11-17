@@ -223,7 +223,7 @@ turnMenu(Players, Turn, Board, PlayersInfo, NBoard, NPlayersInfo):-
 					write('Error.'), nl
 					);
 	Input = '3' -> validMoves(Board, Player, ListOfMoves);
-	write('Invalid input..'), nl
+	write('Invalid input..'), nl, nl
 	).
 		
 inputCoords(SrcRow, SrcCol):-
