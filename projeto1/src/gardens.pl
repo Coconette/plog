@@ -4,6 +4,11 @@
 :- include('update.pl').
 :- include('actions.pl').
 	
+test:-
+	initializeBoard(Board),
+	botPickCoords(Row, Column, 1, Board),
+	write('Coords: '), write(Row), write(':'), write(Column).
+
 gardens:-
 	initialMenu.
 
@@ -126,6 +131,231 @@ playGame(Players, Turn, Board, PlayersInfo):-
 	);
 	checkWinner(Players, NPlayersInfo)
 	).
+	
+playAgainstBot(Board, PlayersInfo):-
+	turnMenu(Players, 1, Board, PlayersInfo, XBoard, XPlayersInfo),
+	printBoard(XBoard),
+	checkEndGame(1, XPlayersInfo, End1),
+	(
+	End1 = 0 -> write('Computer turn.'), nl,
+				botPlay(XPlayersInfo, NPlayersInfo, XBoard, NBoard),
+				printBoard(NBoard),
+				checkEndGame(2, NPlayersInfo, End2),
+				(
+				End2 = 0 -> playAgainstBot(NBoard, NPlayersInfo);
+				checkWinner(2, NPlayersInfo)
+				);
+	checkWinner(2, NPlayersInfo)
+	).
+	
+botPlay(PlayersInfo, NPlayersInfo, Board, NBoard):-
+	getPlayerInfo(PlayersInfo, 2, Purple, Red, Blue, Yellow, White, Green, Action, Position, Laps, 0),
+	random(0, 10, Choice),
+	(
+	Action < 2 ->
+				(
+				Choice = 1 ->	getObjectOnBoard(Board, ActionOne, 0, 12),
+								(
+								ActionOne = 'V' -> botPickCoords(TreeRow, TreeCol, 2, Board),
+													botPickCoords(FlowerRow, FlowerCol, 1, Board),
+													getObjectOnBoard(Board, Flower, FlowerCol, FlowerRow),
+													placeObjectOnBoard(Board, XBoard, Flower, TreeCol, TreeRow),
+													placeObjectOnBoard(XBoard, NBoard, 'T', FlowerCol, FlowerRow),
+													NewAction is Action + 1,
+													updatePlayersInfo(2, PlayersInfo, 2, Purple, Red, Blue, Yellow, White, Green, NewAction, Position, Laps, NPlayersInfo),
+												write('Computer used Action One'), nl;
+								botPlay(PlayersInfo, NPlayersInfo, Board, NBoard)
+								);
+				Choice = 2 ->	getObjectOnBoard(Board, ActionTwo, 1, 12),
+								(
+								ActionTwo = 'W' -> botPickCoords(OneRow, OneCol, 1, Board),
+													botPickCoords(TwoRow, TwoCol, 1, Board),
+													getObjectOnBoard(Board, FlowerOne, OneCol, OneRow),
+													getObjectOnBoard(Board, FlowerTwo, TwoCol, TwoRow),
+													placeObjectOnBoard(Board, XBoard, FlowerOne, TwoCol, TwoRow),
+													placeObjectOnBoard(XBoard, NBoard, FlowerTwo, OneCol, OneRow),
+													NewAction is Action + 1,
+													updatePlayersInfo(2, PlayersInfo, 2, Purple, Red, Blue, Yellow, White, Green, NewAction, Position, Laps, NPlayersInfo),
+												write('Computer used Action Two'), nl;
+								botPlay(PlayersInfo, NPlayersInfo, Board, NBoard)
+								);
+				Choice = 3 ->	getObjectOnBoard(Board, ActionThree, 2, 12),
+								(
+								ActionThree = 'X' -> botPickCoords(FlowerRow, FlowerCol, 1, Board),
+													botPickCoords(EmptyRow, EmptyCol, 0, Board),
+													getObjectOnBoard(Board, Flower, FlowerCol, FlowerRow),
+													placeObjectOnBoard(Board, XBoard, Flower, EmptyCol, EmptyRow),
+													placeObjectOnBoard(XBoard, NBoard, ' ', FlowerCol, FlowerRow),
+													NewAction is Action + 1,
+													updatePlayersInfo(2, PlayersInfo, 2, Purple, Red, Blue, Yellow, White, Green, NewAction, Position, Laps, NPlayersInfo),
+												write('Computer used Action Three'), nl;
+								botPlay(PlayersInfo, NPlayersInfo, Board, NBoard)
+								);
+				Choice = 4 ->	getObjectOnBoard(Board, ActionFour, 3, 12),
+								(
+								ActionFour = 'Y' -> botPickCoords(TreeRow, TreeCol, 2, Board),
+													botPickCoords(EmptyRow, EmptyCol, 0, Board),
+													placeObjectOnBoard(Board, XBoard, 'T', EmptyCol, EmptyRow),
+													placeObjectOnBoard(XBoard, NBoard, ' ', TreeCol, TreeRow),
+													NewAction is Action + 1,
+													updatePlayersInfo(2, PlayersInfo, 2, Purple, Red, Blue, Yellow, White, Green, NewAction, Position, Laps, NPlayersInfo),
+												write('Computer used Action Four'), nl;
+								botPlay(PlayersInfo, NPlayersInfo, Board, NBoard)
+								);
+				Choice = 5 ->	getObjectOnBoard(Board, ActionFive, 4, 12),
+								(
+								ActionFive = 'Z' -> updatePosition(2, Position, Laps, 5, NPosition, NLaps, Board, XBoard, 0, 0),
+													updatePlayersInfo(2, PlayersInfo, 2, Purple, Red, Blue, Yellow, White, Green, 1, NPosition, NLaps, NPlayersInfo),
+													placeObjectOnBoard(XBoard, NBoard, '-', 4, 12),
+												write('Computer used Action Five'), nl;
+								botPlay(PlayersInfo, NPlayersInfo, Board, NBoard)
+								);
+				botPickFlower(Purple, Red, Blue, Yellow, White, Green, Pick),
+				botPickCoords(Row, Column, 0, Board),
+				(
+				Pick = 0 -> placeObjectOnBoard(Board, XBoard, '$', Column, Row),
+							getScore(XBoard, '$', Row, Column, Score),
+							write('Computer placed a $ flower on '), write(Column), write(':'), write(Row), nl,
+							write('Computer scored '), write(Score), write(' points this turn.'), nl,
+							updatePosition(2, Position, Laps, Score, NPosition, NLaps, XBoard, NBoard, 0, 0),
+							NPurple is Purple - 1,
+							updatePlayersInfo(2, PlayersInfo, 2, NPurple, Red, Blue, Yellow, White, Green, Action, NPosition, NLaps, NPlayersInfo);
+				Pick = 1 -> placeObjectOnBoard(Board, XBoard, '&', Row, Column),
+							getScore(XBoard, '&', Row, Column, Score),
+							write('Computer placed a & flower on '), write(Column), write(':'), write(Row), nl,
+							write('Computer scored '), write(Score), write(' points this turn.'), nl,
+							updatePosition(2, Position, Laps, Score, NPosition, NLaps, XBoard, NBoard, 0, 0),
+							NRed is Red - 1,
+							updatePlayersInfo(2, PlayersInfo, 2, Purple, NRed, Blue, Yellow, White, Green, Action, NPosition, NLaps, NPlayersInfo);
+				Pick = 2 -> placeObjectOnBoard(Board, XBoard, '#', Row, Column),
+							getScore(XBoard, '#', Row, Column, Score),
+							write('Computer placed a # flower on '), write(Column), write(':'), write(Row), nl,
+							write('Computer scored '), write(Score), write(' points this turn.'), nl,
+							updatePosition(2, Position, Laps, Score, NPosition, NLaps, XBoard, NBoard, 0, 0),
+							NBlue is Blue - 1,
+							updatePlayersInfo(2, PlayersInfo, 2, Purple, Red, NBlue, Yellow, White, Green, Action, NPosition, NLaps, NPlayersInfo);
+				Pick = 3 -> placeObjectOnBoard(Board, XBoard, '*', Row, Column),
+							getScore(XBoard, '*', Row, Column, Score),
+							write('Computer placed a * flower on '), write(Column), write(':'), write(Row), nl,
+							write('Computer scored '), write(Score), write(' points this turn.'), nl,
+							updatePosition(2, Position, Laps, Score, NPosition, NLaps, XBoard, NBoard, 0, 0),
+							NYellow is Yellow - 1,
+							updatePlayersInfo(2, PlayersInfo, 2, Purple, Red, Blue, NYellow, White, Green, Action, NPosition, NLaps, NPlayersInfo);
+				Pick = 4 -> placeObjectOnBoard(Board, XBoard, '+', Row, Column),
+							getScore(XBoard, '+', Row, Column, Score),
+							write('Computer placed a + flower on '), write(Column), write(':'), write(Row), nl,
+							write('Computer scored '), write(Score), write(' points this turn.'), nl,
+							updatePosition(2, Position, Laps, Score, NPosition, NLaps, XBoard, NBoard, 0, 0),
+							NWhite is White - 1,
+							updatePlayersInfo(2, PlayersInfo, 2, Purple, Red, Blue, Yellow, NWhite, Green, Action, NPosition, NLaps, NPlayersInfo);
+				Pick = 5 -> placeObjectOnBoard(Board, XBoard, '@', Row, Column),
+							getScore(XBoard, '@', Row, Column, Score),
+							write('Computer placed a @ flower on '), write(Column), write(':'), write(Row), nl,
+							write('Computer scored '), write(Score), write(' points this turn.'), nl,
+							updatePosition(2, Position, Laps, Score, NPosition, NLaps, XBoard, NBoard, 0, 0),
+							NGreen is Green - 1,
+							updatePlayersInfo(2, PlayersInfo, 2, Purple, Red, Blue, Yellow, White, NGreen, Action, NPosition, NLaps, NPlayersInfo)
+				));
+	Action = 2 ->
+				botPickFlower(Purple, Red, Blue, Yellow, White, Green, Pick),
+				botPickCoords(Row, Column, 0, Board),
+				(
+				Pick = 0 -> placeObjectOnBoard(Board, XBoard, '$', Row, Column),
+							getScore(XBoard, '$', Row, Column, Score),
+							write('Computer placed a $ flower on '), write(Column), write(':'), write(Row), nl,
+							write('Computer scored '), write(Score), write(' points this turn.'), nl,
+							updatePosition(2, Position, Laps, Score, NPosition, NLaps, XBoard, NBoard, 0, 0),
+							NPurple is Purple - 1,
+							updatePlayersInfo(2, PlayersInfo, 2, NPurple, Red, Blue, Yellow, White, Green, Action, NPosition, NLaps, NPlayersInfo);
+				Pick = 1 -> placeObjectOnBoard(Board, XBoard, '&', Row, Column),
+							getScore(XBoard, '&', Row, Column, Score),
+							write('Computer placed a & flower on '), write(Column), write(':'), write(Row), nl,
+							write('Computer scored '), write(Score), write(' points this turn.'), nl,
+							updatePosition(2, Position, Laps, Score, NPosition, NLaps, XBoard, NBoard, 0, 0),
+							NRed is Red - 1,
+							updatePlayersInfo(2, PlayersInfo, 2, Purple, NRed, Blue, Yellow, White, Green, Action, NPosition, NLaps, NPlayersInfo);
+				Pick = 2 -> placeObjectOnBoard(Board, XBoard, '#', Row, Column),
+							getScore(XBoard, '#', Row, Column, Score),
+							write('Computer placed a # flower on '), write(Column), write(':'), write(Row), nl,
+							write('Computer scored '), write(Score), write(' points this turn.'), nl,
+							updatePosition(2, Position, Laps, Score, NPosition, NLaps, XBoard, NBoard, 0, 0),
+							NBlue is Blue - 1,
+							updatePlayersInfo(2, PlayersInfo, 2, Purple, Red, NBlue, Yellow, White, Green, Action, NPosition, NLaps, NPlayersInfo);
+				Pick = 3 -> placeObjectOnBoard(Board, XBoard, '*', Row, Column),
+							getScore(XBoard, '*', Row, Column, Score),
+							write('Computer placed a * flower on '), write(Column), write(':'), write(Row), nl,
+							write('Computer scored '), write(Score), write(' points this turn.'), nl,
+							updatePosition(2, Position, Laps, Score, NPosition, NLaps, XBoard, NBoard, 0, 0),
+							NYellow is Yellow - 1,
+							updatePlayersInfo(2, PlayersInfo, 2, Purple, Red, Blue, NYellow, White, Green, Action, NPosition, NLaps, NPlayersInfo);
+				Pick = 4 -> placeObjectOnBoard(Board, XBoard, '+', Row, Column),
+							getScore(XBoard, '+', Row, Column, Score),
+							write('Computer placed a + flower on '), write(Column), write(':'), write(Row), nl,
+							write('Computer scored '), write(Score), write(' points this turn.'), nl,
+							updatePosition(2, Position, Laps, Score, NPosition, NLaps, XBoard, NBoard, 0, 0),
+							NWhite is White - 1,
+							updatePlayersInfo(2, PlayersInfo, 2, Purple, Red, Blue, Yellow, NWhite, Green, Action, NPosition, NLaps, NPlayersInfo);
+				Pick = 5 -> placeObjectOnBoard(Board, XBoard, '@', Row, Column),
+							getScore(XBoard, '@', Row, Column, Score),
+							write('Computer placed a @ flower on '), write(Column), write(':'), write(Row), nl,
+							write('Computer scored '), write(Score), write(' points this turn.'), nl,
+							updatePosition(2, Position, Laps, Score, NPosition, NLaps, XBoard, NBoard, 0, 0),
+							NGreen is Green - 1,
+							updatePlayersInfo(2, PlayersInfo, 2, Purple, Red, Blue, Yellow, White, NGreen, Action, NPosition, NLaps, NPlayersInfo)
+				)
+	).
+	
+botPickFlower(Purple, Red, Blue, Yellow, White, Green, Pick):-
+	random(0, 6, Flower),
+	(
+	Flower = 0 -> (
+					Purple = 0 -> botPickFlower(Purple, Red, Blue, Yellow, White, Green, Pick);
+					Pick is Flower
+					);
+	Flower = 1 -> (
+					Red = 0 -> botPickFlower(Purple, Red, Blue, Yellow, White, Green, Pick);
+					Pick is Flower
+					);
+	Flower = 2 -> (
+					Blue = 0 -> botPickFlower(Purple, Red, Blue, Yellow, White, Green, Pick);
+					Pick is Flower
+					);
+	Flower = 3 -> (
+					Yellow = 0 -> botPickFlower(Purple, Red, Blue, Yellow, White, Green, Pick);
+					Pick is Flower
+					);
+	Flower = 4 -> (
+					White = 0 -> botPickFlower(Purple, Red, Blue, Yellow, White, Green, Pick);
+					Pick is Flower
+					);	
+	Green = 0 -> botPickFlower(Purple, Red, Blue, Yellow, White, Green, Pick);
+	Pick is Flower).
+	
+botPickCoords(Row, Column, Object, Board):-
+	random(1, 10, NewCol),
+	random(1, 10, NewRow),
+	(
+	Object = 1 -> getObjectOnBoard(Board, NewObject, NewCol, NewRow),
+				(
+				NewObject = '$' -> Row is NewRow, Column is NewCol;
+				NewObject = '&' -> Row is NewRow, Column is NewCol;
+				NewObject = '#' -> Row is NewRow, Column is NewCol;
+				NewObject = '*' -> Row is NewRow, Column is NewCol;
+				NewObject = '+' -> Row is NewRow, Column is NewCol;
+				NewObject = '@' -> Row is NewRow, Column is NewCol;
+				botPickCoords(Row, Column, Object, Board)
+				);
+	Object = 0 -> getObjectOnBoard(Board, NewObject, NewCol, NewRow),
+				(
+				NewObject = ' ' -> Row is NewRow, Column is NewCol;
+				botPickCoords(Row, Column, Object, Board)
+				);
+	getObjectOnBoard(Board, NewObject, NewCol, NewRow),
+	(
+	NewObject = 'T' -> Row is NewRow, Column is NewCol;
+	botPickCoords(Row, Column, Object, Board)
+	)
+).
 	
 getScore(Board, Object, Row, Col, Score):-
 	Score is 1.

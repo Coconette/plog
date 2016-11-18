@@ -17,9 +17,9 @@ chooseOption:-
 	getChar(Input),
 	discardInputChar,
 	(
-		Input = '1' -> initGame(1, Board, PlayersInfo),		
+		Input = '1' -> initGame(2, Board, PlayersInfo),		
 					treeStartMenu(1, Board, NBoard),
-					playGame(1, 1, NBoard, PlayersInfo);
+					playAgainstBot(NBoard, PlayersInfo);
 		Input = '2' -> initGame(2, Board, PlayersInfo),		
 					treeStartMenu(2, Board, NBoard),
 					playGame(2, 1, NBoard, PlayersInfo);
