@@ -1,0 +1,34 @@
+14. GESTÃO PORTUÁRIA DE CONTENTORES
+
+A gestão portuária de contentores que chegam por via marítima é de grande complexidade. Os
+contentores, de dimensões consideráveis e variáveis, têm restrições físicas de empilhamento
+num espaço que é sempre limitado. Por outro lado, o tempo de permanência de um contentor
+no porto é também limitado, e a sua expedição em camiões de transporte tem que ser
+equacionada aquando da sua chegada em navios e recepção.
+
+No porto temos um espaço limitado, que pode ser considerado como uma grelha de P posições
+onde os contentores podem ser empilhados. Os contentores são manipulados através de gruas. A
+manipulação de cada contentor demora uma quantidade de tempo relacionada com as suas
+dimensões e peso. Obviamente, um contentor só pode ser manipulado (quer quando está no
+navio quer quando está no porto) se não tiver nenhum contentor por cima.
+
+Quando chega um navio, este traz contentores de diferentes dimensões, empilhados segundo o
+espaço existente nesse navio. O empilhamento dos contentores, no porto, obedece a
+determinadas restrições: contentores maiores não podem ser empilhados por cima de
+contentores mais pequenos; o peso total dos contentores colocados em cima de um contentor C
+não pode ultrapassar uma constante vezes o peso do próprio contentor C; uma pilha de
+contentores não pode ter mais do que N contentores, em que N depende da dimensão do
+contentor que está na sua base.
+
+Cada contentor que entra no porto tem já uma data prevista para a sua expedição em camiões.
+Ordenando temporalmente essas saídas, pretende-se minimizar o tempo de expedição do
+conjunto de contentores. Expedir um contentor significa manipulá-lo, ou seja, pegar nele com
+uma grua e colocá-lo em cima do camião que o irá transportar. Claro está que se houver
+contentores por cima dele estes terão que ser primeiro manipulados (pode assumir aqui que há
+gruas suficientes para manter os contentores em “suspenso” - interessa portanto apenas
+contabilizar o tempo gasto na operação).
+
+Defina o problema como um problema de satisfação de restrições e resolva-o com PLR, de modo
+a que seja possível resolver problemas desta classe com diferentes parâmetros, isto é,
+diferentes (números de) contentores e suas dimensões/pesos, diferentes espaços físicos no
+porto, diferentes tempos de expedição, etc.

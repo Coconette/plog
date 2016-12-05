@@ -204,8 +204,7 @@ turnMenu(Players, Turn, Board, PlayersInfo, NBoard, NPlayersInfo):-
 	getPlayerInfo(PlayersInfo, Turn, Purple, Red, Blue, Yellow, White, Green, Action, Position, Laps, 0),
 	write('Player '), write(Turn), write(' turn. You have completed '), write(Laps), write(' laps. Please select an option.'), nl,
 	write('1. PLACE FLOWER'), nl,
-	write('2. USE AN ACTION'), nl, 
-	write('3. VALID_MOVES'), nl,nl,
+	write('2. USE AN ACTION'), nl,nl,
 	getChar(Input), discardInputChar,
 	(
 	Input = '1' -> flowerPlacementMenu(Players, Turn, Board, NBoard, PlayersInfo, NPlayersInfo);
@@ -215,14 +214,14 @@ turnMenu(Players, Turn, Board, PlayersInfo, NBoard, NPlayersInfo):-
 									write('You already used an action.'), nl,
 									turnMenu(Players, Turn, Board, PlayersInfo, NBoard, NPlayersInfo)
 									);
-					Players = 2 -> (
-									Action < 2 -> actionMenu(Players, Turn, Board, NBoard, PlayersInfo, NPlayersInfo);
-									write('You already used two actions.'), nl,
-									turnMenu(Players, Turn, Board, PlayersInfo, NBoard, NPlayersInfo)
-									);
+					Players > 0 -> (
+					Action < 2 -> actionMenu(Players, Turn, Board, NBoard, PlayersInfo, NPlayersInfo);
+								write('You already used two actions.'), nl,
+								turnMenu(Players, Turn, Board, PlayersInfo, NBoard, NPlayersInfo)
+					
+					);
 					write('Error.'), nl
 					);
-	Input = '3' -> validMoves(Board, Player, ListOfMoves);
 	write('Invalid input..'), nl, nl
 	).
 		
@@ -257,8 +256,3 @@ getInt(Input):-
 
 discardInputChar:-
 	get_code(_).
-	
-validMoves(Board, Player, ListOfMoves):-
-	write('Place a flower'), nl,
-	write('Use an action'), nl,nl,
-	turnMenu(Players, Turn, Board, PlayersInfo, NBoard, NPlayersInfo).

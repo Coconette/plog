@@ -133,7 +133,7 @@ playGame(Players, Turn, Board, PlayersInfo):-
 	).
 	
 playAgainstBot(Board, PlayersInfo):-
-	turnMenu(Players, 1, Board, PlayersInfo, XBoard, XPlayersInfo),
+	turnMenu(2, 1, Board, PlayersInfo, XBoard, XPlayersInfo),
 	printBoard(XBoard),
 	checkEndGame(1, XPlayersInfo, End1),
 	(
