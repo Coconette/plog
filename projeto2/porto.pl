@@ -1,40 +1,101 @@
 :- use_module(library(random)).
+:- use_module(library(lists)).
 
-
-porto:-
+startPort :-
+	write('Type the size of the Port: '),
 	read(Size),
 	initializePort(Size, Port),
-	write(Port).
+	optionMenu(Port).
+	
+test:-
+	initializePort(6, Port),
+	findall
+	generateShip(Ship),
+	write(Ship), nl,
+	nth1(1, Ship, Container),
+	write(Container).
+
+optionMenu(Port):-
+	printPort(Port),
+	write('OPTIONS'), nl,
+	write('1. Get new ship.'), nl,
+	write('2. Exit.'), nl,
+	read(Option),
+	(
+	Option = 1 -> arriveShip(Port, NPort), optionMenu(NPort);
+	Option > 2 -> optionMenu(Port)
+	).
+	
+arriveShip(Port, NPort):-
+	write('Ship is parking, handling containers'), nl,
+	generateShip(Ship),
+	write('Ship contains : '), write(Ship),
+	handleContainers(Port, Ship, NPort).
+	
+handleContainers(Port, Ship, NPort):-
+	nth1(1, Ship, Container),
+	findall
 	
 initializePort(0, []).
 initializePort(N, [[]|T]):-
 	N > 0,
 	N1 is N - 1,
 	initializePort(N1, T).
+
+generateShip(Ship):-
+	random(1, 10, Size),
+	write('Size of ship: '), write(Size), nl,
+	generateNContainers(Size, Ship).
+
+printPort([]).
+printPort([Pile|T]):-
+	printPile(Pile),
+	printPort(T).
 	
+printPile([]).
+printPile([[H|T]|T2]):-
+	write([H|T]), nl,
+	printPile(T2).
+	
+printShip([]).
+printShip([Container|T]):-
+	write(Container), nl,
+	printShip(T).
 
 	
-arriveShip(Ship):- 
-	disposeContainers(Port, Ship),
-	write('Ship is parking, handling containers'), nl,
-	write('Ship contains :'), nl,
-	displayShip(Ship).
+generatePile(Pile):-
+	createContainer(Container, 30, 30),
+	getContainerWeight(Container, Weight),
+	LimWei is Weight * 5,
+	getContainerDimension(Container, LimDim),
+	N is div(LimDim,3),
+	generateNContainers(Container, N, LimWei, LimDim, Pile).
 	
+generateNContainers(0, []).
+generateNContainers(N, [Container|T]):-
+	N1 is N - 1,
+	generateContainer(Container, 30, 20),
+	generateNContainers(N1, T).
 	
-createShip([]).
-createShip([H|T]):-
-	random(0,5, SizeS),
-	Counter is SizeS - 1, 
-	random(0,8, Container),
+generateContainer(Container, LimWei, LimDim):-
+	Container = [Dimension, Weight, Date],
 	(
-		Container = '0' -> H = 's',
-		Container = '1' -> H = 'm',
-		Container = '2' -> H = 'b',
-	)
-	createShip(T).
+	LimWei > 30 -> random(1, 30, Weight);
+					random(1, LimWei, Weight)
+					),
+	(
+	LimDim > 30 -> random(5, 30, Dimension);
+					random(5, LimDim, Dimension)
+					),
+	random(5, 30, Date).
 	
-displayShip([]).
-displayShip([H|T]):-
-	write(H),
-	displayShip(T).
-	
+getContainerDimension(Container, Dimension):-
+	nth1(1, Container, Dimension).
+getContainerWeight(Container, Weight):-
+	nth1(2, Container, Weight).
+getContainerDate(Container, Date):-
+	nth1(3, Container, Date).
+getContainerManipTime(Container, Time):-
+	nth1(1, Container, Dimension),
+	nth1(2, Container, Weight),
+	Time is Dimension / 5 + Weight / 4.
