@@ -34,7 +34,15 @@ arriveShip(Port, NPort):-
 	
 handleContainers(Port, Ship, NPort):-
 	nth1(1, Ship, Container),
-	findall
+	findall([], Port, EmptySpots),
+	length(EmptySpots, NumberSpots),
+	(
+	NumberSpots > 0 -> placeOnEmpty(Port, Ship, NumberSpots);
+	write('No empty spaces, calculating best approach'),
+	nl
+	),
+	readPort(Port),
+	placeOnPile(Port, Ship).
 	
 initializePort(0, []).
 initializePort(N, [[]|T]):-
@@ -99,3 +107,23 @@ getContainerManipTime(Container, Time):-
 	nth1(1, Container, Dimension),
 	nth1(2, Container, Weight),
 	Time is Dimension / 5 + Weight / 4.
+	
+readPort([]).
+readPort([H|T]):-
+	getContainerDate(H, D),
+	%como ir buscar um 2o elemento da lista? - para fazer a comparação e depois "guarda-lo" caso seja menor%
+	%objetivo é ler o porto para caso tenha de despachar algum contentor, faze-lo agora.%
+
+
+
+placeOnPile(Port, [H|T]):-
+	getContainerDimension([H|T], D),
+	%Same problem as above%
+	
+placeOnEmpty([], [], NumberSpots).
+placeOnEmpty([H|T], [Hs|Ts], NumberSpots):-
+	(
+	H = ' ' -> H = Hs, Number is NumberSpots - 1, write('Placed container'), nl;
+	placeOnEmpty(T,[Hs|Ts]), NumberSpots)
+	),
+	placeOnEmpty(T,Ts, Number).
