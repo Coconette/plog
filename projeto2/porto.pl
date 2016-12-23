@@ -110,7 +110,7 @@ getContainerManipTime(Container, Time):-
 	
 readPort([], C).
 readPort([H|T], C):-
-	getContainerDate(H, D)
+	getContainerDate(H, D),
 	(
 		D > C -> readPort(T, C);
 		D = 0 -> dispatcheContainer(H), readPort(T, C);
@@ -126,7 +126,7 @@ placeOnEmpty([], [], NumberSpots).
 placeOnEmpty([H|T], [Hs|Ts], NumberSpots):-
 	(
 	H = ' ' -> H = Hs, Number is NumberSpots - 1, write('Placed container'), nl;
-	placeOnEmpty(T,[Hs|Ts]), NumberSpots)
+	placeOnEmpty(T,[Hs|Ts], NumberSpots)
 	),
 	placeOnEmpty(T,Ts, Number).
 	
@@ -134,3 +134,5 @@ placeOnEmpty([H|T], [Hs|Ts], NumberSpots):-
 getNextElement([H|T], E):-
 	E = H.
 	
+dispatcheContainer(H):-
+	H = 0 .
