@@ -7,6 +7,18 @@ startPort :-
 	initializePort(Size, Port),
 	optionMenu(Size, Port).
 	
+tester :-
+	test1(Port),
+	write(Port), nl, nl,
+	test2(Ship),
+	write(Ship), nl, nl,
+	placeContainers(3, Port, Ship, NPort).
+	
+test1(Port):-
+	Port = [[[10, 15, 16], [5, 20, 15]], [[10, 15, 16], [5, 20, 15]],[[10, 15, 16], [5, 20, 15]]].
+test2(Ship) :-
+	Ship = [[8, 3, 20]].
+	
 test:-
 	Test = [[],[],[],[1]],
 	nth1(Number, Test, [1]),
@@ -30,41 +42,47 @@ arriveShip(Size, Port, NPort):-
 	write('Ship contains : '), write(Ship), nl,
 	placeContainers(Size, Port, Ship, NPort).
 
-placeContainers(_, Port, [], Port).
+placeContainers(_,Port,List, Port):-
+	List = [].
 placeContainers(Size, Port, [Container|T], NPort):-
-	getEmptySpots(Size, Port, EmptySpots),
-	length(EmptySpots, NumberSpots),
+	getEmptySpot(Size, Port, EmptySpot),
 	(
-	NumberSpots > 0 -> nth1(1, EmptySpots, Empty),
-						placeOnEmpty(Port, Container, Empty, 1, XPort);
-	getPossibleSpot(Size, Port, Container, PossPile, PossSpot),
+	EmptySpot > 0 -> placeOnEmpty(Port, Container, EmptySpot, 1, XPort);
+	getPossibleSpot(1, Size, Port, Container, PossPile, PossSpot),
 	(
 	PossPile > 0 -> (
-					PossSpot > 0 -> placeOnSpot(Port, Container, PossPile, PossSpot, XPort);
-					write('No place available to place container.'), nl
+					PossSpot > 0 -> write('Possible to place on pile '), write(PossPile),
+									write(' on position '), write(PossSpot), nl,
+									placeOnSpot(Port, Container, PossPile, PossSpot, XPort);
+					write('No place available to place container.'), nl,
+					XPort is Port
 					);
-	write('No place available to place container.'), nl
+	write('No place available to place container.'), nl,
+	XPort = Port
 	)
 	),
 	placeContainers(Size, XPort, T, NPort).	
 	
-getPossibleSpot(Size,_,_, Size, Size):-
-	Size = 0.
-getPossibleSpot(Size, [Pile|T], Container, PossPile, PossSpot):-
-	Size > 0,
+getPossibleSpot(Counter, Size,_,_, 0, 0):-
+	Size < Counter.
+getPossibleSpot(Counter, Size, [Pile|T], Container, PossPile, PossSpot):-
+	write('Checking Pile '), write(Counter), write(' for possible placing spots'), nl,
 	checkPileDim(Pile, Container, 1, Possible),
+	write('Dim Possible:'), write(Possible), nl,
 	checkBottomWei(Pile, Container, 1, Possible, Check1),
+	write('BottWei Possible:'), write(Check1), nl,
 	checkTopWei(Pile, Container, 1, Check1, Check2),
+	write('TopWei Possible:'), write(Check2), nl, nl,
 	(
 	Check2 > 0 -> PossSpot is Check2,
-					PossPile is Size;
-	NSize is Size - 1,
-	getPossibleSpot(NSize, T, Container, PossPile, PossSpot)
+					PossPile is Size - Counter;
+	NCounter is Counter + 1,
+	getPossibleSpot(NCounter, Size, T, Container, PossPile, PossSpot)
 	).
 
-checkPile([C1|[]], Container, Counter, Possible):-
+checkPileDim([C1|[]], Container, Counter, Possible):-
 	Possible is Counter + 1.
-checkPile([C1|[C2|T]], Container, Counter, Possible):-
+checkPileDim([C1|[C2|T]], Container, Counter, Possible):-
 	NCounter is Counter + 1,
 	getContainerDimension(Container, Dim),
 	getContainerDimension(C1, D1),
@@ -99,24 +117,25 @@ checkTopWei([_|T], Container, Counter, Check1, Check2):-
 	Counter < Check1,
 	NCounter is Counter + 1,
 	checkTopWei(T, Container, NCounter, Check1, Check2).
-checkTopWei([_|T], Container, Counter, Check1, Check2):-
+checkTopWei(Pile, Container, Counter, Check1, Check2):-
 	Check1 = Counter,
 	getContainerWeight(Container, Weight),
-	getWeightOnTop(T, 0, TotalWeight),
+	getWeightOnTop(Pile, 0, TotalWeight),
+	write('Total Weight On Top '), write(TotalWeight), nl,
 	MaxWeight is Weight * 5,
 	(
 	MaxWeight < TotalWeight -> Check2 is 0;
 	Check2 is Check1
 	).
 	
-getEmptySpots(0,_,[]).
-getEmptySpots(Size, List, [H|T]):-
+getEmptySpot(0,_,0).
+getEmptySpot(Size, List, Empty):-
 	Size > 0,
 	nth1(Size, List, Spot),
 	NSize is Size - 1,
 	(
-	Spot = [] -> H is Size, getEmptySpots(NSize, List, T);
-			getEmptySpots(NSize, List, [H|T])
+	Spot = [] -> Empty is Size;
+	getEmptySpot(NSize, List, Empty)
 	).
 	
 initializePort(0, []).
@@ -191,11 +210,11 @@ readPort([H|T], C):-
 		D = 0 -> dispatcheContainer(H), readPort(T, C);
 		readPort(T, D)
 	).
-
-placeOnSpot([Pile|T], Container, PossPile, PossSpot, [Pile|T2]):-
+	
+placeOnSpot([H1|T1], Container, PossPile, PossSpot, [H1|T2]):-
 	PossPile > 1,
 	NPossPile is PossPile - 1,
-	placeOnSpot(T, Container, NPossPile, PossSpot, T2).
+	placeOnSpot([T1], Container, NPossPile, PossSpot, [T2]).	
 placeOnSpot([Pile|T], Container, PossPile, PossSpot, [NPile|T]):-
 	PossPile = 1,
 	placeOnPile(Pile, Container, PossSpot, NPile).
@@ -204,10 +223,8 @@ placeOnPile([C|T], Container, PossSpot, [C|T2]):-
 	PossSpot > 1,
 	NPossSpot is PossSpot - 1,
 	placeOnPile(T, Container, NPossSpot, T2).
-placeOnPile([H|T], Container, PossSpot, NPile):-
-	PossSpot = 1,
-	append(Container, H,Aux),
-	append(Aux, T, NPile).
+placeOnPile(Pile, Container, PossSpot, [Container|Pile]):-
+	PossSpot = 1.
 
 placeOnEmpty([_|Told], Container, Empty, Counter, [[Container]|Told]):-
 	Empty = Counter.
