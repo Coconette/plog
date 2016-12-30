@@ -1,127 +1,130 @@
 :- use_module(library(random)).
 :- use_module(library(lists)).
 
-startPort :-
+startPort:-
 	write('Type the size of the Port: '),
 	read(Size),
 	initializePort(Size, Port),
 	optionMenu(Size, Port).
 	
-tester :-
+tester:-
 	test1(Port),
-	write(Port), nl, nl,
-	test2(Ship),
-	write(Ship), nl, nl,
-	placeContainers(3, Port, Ship, NPort).
+	printPort(Port, 0),
+	test3(Container),
+	printContainer(Container),
+	placeOnSpot(Port, Container, 2, 2, NPort),
+	printPort(NPort, 0).
 	
 test1(Port):-
 	Port = [[[10, 15, 16], [5, 20, 15]], [[10, 15, 16], [5, 20, 15]],[[10, 15, 16], [5, 20, 15]]].
-test2(Ship) :-
-	Ship = [[8, 3, 20]].
-	
-test:-
-	Test = [[],[],[],[1]],
-	nth1(Number, Test, [1]),
-	write(Number).
+test2(Ship):-
+	Ship = [[8, 30, 20], [30, 10, 16]].
+test3(Container):-
+	Container = [8, 30, 20].
 
 optionMenu(Size, Port):-
-	write('YOUR PORT'), nl,
-	write(Port), nl, nl,
+	write(Port), nl,
 	write('OPTIONS'), nl,
 	write('1. Get new ship.'), nl,
 	write('2. Exit.'), nl,
 	read(Option),
 	(
 	Option = 1 -> arriveShip(Size, Port, NPort), optionMenu(Size, NPort);
-	Option > 2 -> optionMenu(Size, Port)
+	Option > 2 -> optionMenu(Size, Port);
+	write('End')
 	).
 	
 arriveShip(Size, Port, NPort):-
-	write('Ship is parking, handling containers'), nl,
 	generateShip(Ship),
-	write('Ship contains : '), write(Ship), nl,
+	write('---SHIP---'), nl, printShip(Ship), nl,
 	placeContainers(Size, Port, Ship, NPort).
 
-placeContainers(_,Port,List, Port):-
-	List = [].
+placeContainers(_,Port,Ship,Port):-
+	Ship = [].
 placeContainers(Size, Port, [Container|T], NPort):-
 	getEmptySpot(Size, Port, EmptySpot),
 	(
 	EmptySpot > 0 -> placeOnEmpty(Port, Container, EmptySpot, 1, XPort);
 	getPossibleSpot(1, Size, Port, Container, PossPile, PossSpot),
+	write('Out of PossSpots with '), write(PossPile), write(' and '), write(PossSpot), nl,
 	(
 	PossPile > 0 -> (
-					PossSpot > 0 -> write('Possible to place on pile '), write(PossPile),
-									write(' on position '), write(PossSpot), nl,
-									placeOnSpot(Port, Container, PossPile, PossSpot, XPort);
-					write('No place available to place container.'), nl,
-					XPort is Port
+					PossSpot > 0 -> write('Placing '), printContainer(Container),
+									write('Pile: '), write(PossPile), write('   Spot: '), write(PossSpot),
+									placeOnSpot(Port, Container, PossPile, PossSpot, XPort),
+									write('placed'), nl;
+					write('Not possible to place '), printContainer(Container), nl,
+					XPort = Port
 					);
-	write('No place available to place container.'), nl,
+	write('Not possible to place '), printContainer(Container), nl,
 	XPort = Port
 	)
 	),
 	placeContainers(Size, XPort, T, NPort).	
-	
+
 getPossibleSpot(Counter, Size,_,_, 0, 0):-
 	Size < Counter.
 getPossibleSpot(Counter, Size, [Pile|T], Container, PossPile, PossSpot):-
-	write('Checking Pile '), write(Counter), write(' for possible placing spots'), nl,
-	checkPileDim(Pile, Container, 1, Possible),
-	write('Dim Possible:'), write(Possible), nl,
-	checkBottomWei(Pile, Container, 1, Possible, Check1),
-	write('BottWei Possible:'), write(Check1), nl,
-	checkTopWei(Pile, Container, 1, Check1, Check2),
-	write('TopWei Possible:'), write(Check2), nl, nl,
-	(
-	Check2 > 0 -> PossSpot is Check2,
-					PossPile is Size - Counter;
+	write('Trying to place '), printContainer(Container),
+	write('into '), nl, printPile(Pile), nl,
 	NCounter is Counter + 1,
+	write('going to check dim.'), nl,
+	checkPileDim(Pile, Container, 1, DimCheck),
+	write('DimCheck: '), write(DimCheck),
+	write('going to check botwei.'), nl,
+	checkBottomWei(Pile, Container, 1, DimCheck, BotWeiCheck),
+	write('   BottomWeiCheck: '), write(BotWeiCheck),
+	write('going to check topwei.'), nl,
+	checkTopWei(Pile, Container, 1, BotWeiCheck, TopWeiCheck),
+	write('   TopWeiCheck: '), write(TopWeiCheck), nl,
+	(
+	TopWeiCheck > 0 -> PossPile is Counter,
+						PossSpot is TopWeiCheck;
 	getPossibleSpot(NCounter, Size, T, Container, PossPile, PossSpot)
 	).
 
-checkPileDim([C1|[]], Container, Counter, Possible):-
-	Possible is Counter + 1.
-checkPileDim([C1|[C2|T]], Container, Counter, Possible):-
+checkPileDim([],_, Counter, Counter).
+checkPileDim([C1|T], Container, Counter, Possible):-
 	NCounter is Counter + 1,
 	getContainerDimension(Container, Dim),
 	getContainerDimension(C1, D1),
-	getContainerDimension(C2, D2),
 	(
-	D1 > Dim -> (
-				D2 > Dim ->	checkPile([C2|T], Container, NCounter, Possible);
-				Possible is NCounter
-				);
+	D1 > Dim -> checkPileDim(T, Container, NCounter, Possible);
 	Possible is Counter
 	).
 
+checkBottomWei(_,_,_,0, 0):-
+	write(' TB1').
 checkBottomWei(_,_,Counter, Spot, Spot):-
-	Counter = Spot.
+	Counter = Spot,
+	write(' TB2').
 checkBottomWei([C1|T], Container, Counter, Spot, Poss):-
 	Spot > Counter,
+	write(' TB3'),
 	NCounter is Counter + 1,
-	getContainerWeight(C1, W1),
 	getContainerWeight(Container, W2),
+	getContainerWeight(C1, W1),
 	getWeightOnTop(T, 0, TotalWeight),
-	NewTotalWeight is TotalWeight + W2,
+	NewTotalWeight is TotalWeight + W2, 
 	MaximumWeight is W1 * 5,
 	(
-	MaximumWeight < NewTotalWeight -> Poss is 0;
-	checkBottomWei(T, Container, NCounter, Spot, Poss)
+	MaximumWeight > NewTotalWeight -> checkBottomWei(T, Container, NCounter, Spot, Poss);
+	Poss is 0
 	).
 
-checkTopWei(_,_,Check1,Check1):-
-	Check1 = 0.
+checkTopWei(_,_,_,0,0):-
+	write(' TT1').
 checkTopWei([_|T], Container, Counter, Check1, Check2):-
 	Check1 > 0,
 	Counter < Check1,
+	write(' TT3'),
 	NCounter is Counter + 1,
 	checkTopWei(T, Container, NCounter, Check1, Check2).
 checkTopWei(Pile, Container, Counter, Check1, Check2):-
 	Check1 = Counter,
+	write(' TT2'),
 	getContainerWeight(Container, Weight),
 	getWeightOnTop(Pile, 0, TotalWeight),
-	write('Total Weight On Top '), write(TotalWeight), nl,
 	MaxWeight is Weight * 5,
 	(
 	MaxWeight < TotalWeight -> Check2 is 0;
@@ -145,23 +148,34 @@ initializePort(N, [[]|T]):-
 	initializePort(N1, T).
 
 generateShip(Ship):-
-	random(1, 5, Size),
-	write('Size of ship: '), write(Size), nl,
+	random(1, 2, Size),
 	generateNContainers(Size, Ship).
 
-printPort([]).
-printPort([Pile|T]):-
+printPort([],_):-
+	nl.
+printPort(Port,0):-
+	write('-----PORT-----'), nl,
+	printPort(Port, 1).
+printPort([Pile|T], Counter):-
+	write('---PILE '), write(Counter), write('---'), nl,
 	printPile(Pile),
-	printPort(T).
-	
+	NCounter is Counter + 1,
+	printPort(T, NCounter).
 printPile([]).
-printPile([[H|T]|T2]):-
-	write([H|T]), nl,
+printPile([Container|T2]):-
+	printContainer(Container),
 	printPile(T2).
 	
+printContainer(Container):-
+	getContainerWeight(Container, Weight),
+	getContainerDimension(Container, Dimension),
+	getContainerDate(Container, Date),
+	write('-Container'), write('   Dimension: '), write(Dimension), write('   Weight: '), write(Weight),
+	write('   Date: '), write(Date), nl.
+
 printShip([]).
 printShip([Container|T]):-
-	write(Container), nl,
+	printContainer(Container),
 	printShip(T).
 
 	
@@ -202,19 +216,10 @@ getContainerManipTime(Container, Time):-
 	nth1(2, Container, Weight),
 	Time is Dimension / 5 + Weight / 4.
 	
-readPort([], C).
-readPort([H|T], C):-
-	getContainerDate(H, D),
-	(
-		D > C -> readPort(T, C);
-		D = 0 -> dispatcheContainer(H), readPort(T, C);
-		readPort(T, D)
-	).
-	
 placeOnSpot([H1|T1], Container, PossPile, PossSpot, [H1|T2]):-
 	PossPile > 1,
 	NPossPile is PossPile - 1,
-	placeOnSpot([T1], Container, NPossPile, PossSpot, [T2]).	
+	placeOnSpot(T1, Container, NPossPile, PossSpot, T2).	
 placeOnSpot([Pile|T], Container, PossPile, PossSpot, [NPile|T]):-
 	PossPile = 1,
 	placeOnPile(Pile, Container, PossSpot, NPile).
@@ -234,12 +239,15 @@ placeOnEmpty([Hold|Told],Container, Empty, Counter, [Hold|Tnew]):-
 	placeOnEmpty(Told,Container, Empty, NCounter, Tnew).
 
 getWeightOnTop([], Counter, Counter).
-getWeightOnTop([C|T], Counter, Weight):-
+getWeightOnTop([C|[]], Counter, TotalWeight):-
 	getContainerWeight(C, Weight),
-	NWeight is Weight + Counter,
-	getWeightOnTop(T, NWeight, Weight).
+	TotalWeight is Counter + Weight.
+getWeightOnTop([C|T], Counter, TotalWeight):-
+	getContainerWeight(C, Weight),
+	NWeight is Counter + Weight,
+	getWeightOnTop(T, NWeight, TotalWeight).
 	
-getNextElement([H|T], E):-
+getNextElement([H|_], E):-
 	E = H.
 	
 dispatcheContainer(H):-
